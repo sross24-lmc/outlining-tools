@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Outlining the Argument</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Bebas+Neue&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#ffffff;
+  --surface:#f5f5f5;
+  --surface2:#ebebeb;
+  --border:#111111;
+  --border2:#444444;
+  --text:#111111;
+  --text2:#555555;
+  --text3:#999999;
+  --accent:#1a56db;
+  --accent-light:#3b71f5;
+  --accent-pale:#e8efff;
+  --green:#0a7c3e;
+  --green-bg:#e6f5ed;
+  --green-border:#0a7c3e;
+  --amber:#b45309;
+  --amber-bg:#fef3e2;
+  --amber-border:#b45309;
+  --red:#c0392b;
+  --cond-bg:#f9f9f9;
+  --cond-border:#cccccc;
+  --r:0px;
+  --rs:0px;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Space Grotesk',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:120px;}
+
+/* HEADER */
+.site-header{background:#111;border-bottom:3px solid var(--accent);padding:0 40px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200;height:56px;}
+.site-header h1{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:.12em;color:#fff;}
+.header-pill{display:inline-flex;align-items:center;gap:6px;background:transparent;border:1px solid #444;border-radius:0;padding:4px 10px 4px 8px;font-size:11px;color:#aaa;font-family:'Space Mono',monospace;}
+.header-dot{width:6px;height:6px;border-radius:50%;background:var(--accent-light);animation:pdot 2s ease-in-out infinite;}
+@keyframes pdot{0%,100%{opacity:1}50%{opacity:.3}}
+.header-actions{display:flex;gap:10px;align-items:center;}
+.save-status{font-size:10px;color:#888;font-family:'Space Mono',monospace;letter-spacing:.04em;}
+
+/* PROGRESS */
+.progress-rail{background:#fff;border-bottom:3px solid #111;padding:0 40px;display:flex;align-items:stretch;overflow-x:auto;}
+.progress-step{display:flex;align-items:center;gap:9px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text3);cursor:pointer;white-space:nowrap;padding:14px 0;border-bottom:3px solid transparent;margin-bottom:-3px;transition:color .15s,border-color .15s;flex-shrink:0;}
+.progress-step:hover{color:var(--text2);}
+.progress-step.active{color:var(--accent);border-bottom-color:var(--accent);}
+.progress-step.done{color:var(--green);border-bottom-color:var(--green);}
+.step-num{width:22px;height:22px;border:2px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:10px;font-family:'Space Mono',monospace;flex-shrink:0;}
+.progress-step.active .step-num{background:var(--accent);border-color:var(--accent);color:#fff;}
+.progress-step.done .step-num{background:var(--green);border-color:var(--green);color:#fff;}
+.progress-divider{flex:1;height:2px;background:#ddd;margin:0 16px;align-self:center;min-width:24px;}
+
+/* LAYOUT */
+/* SIDEBAR LAYOUT */
+.page-body{display:flex;align-items:flex-start;max-width:1180px;margin:0 auto;padding:0 24px;}
+.sidebar{width:200px;flex-shrink:0;position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto;border-right:2px solid #111;background:#fff;padding:0;display:flex;flex-direction:column;transition:width .2s ease;}
+.sidebar.collapsed{width:36px;}
+.sidebar-toggle{background:#111;border:none;color:#fff;width:100%;padding:10px 0;font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;flex-shrink:0;transition:background .15s;}
+.sidebar-toggle:hover{background:#333;}
+.sidebar-toggle .toggle-icon{font-size:14px;transition:transform .2s;}
+.sidebar.collapsed .toggle-icon{transform:rotate(180deg);}
+.sidebar-toggle .toggle-label{transition:opacity .15s;}
+.sidebar.collapsed .toggle-label{display:none;}
+.sidebar-nav{padding:12px 0;overflow:hidden;flex:1;}
+.sidebar.collapsed .sidebar-nav{display:none;}
+.sidebar-section{margin-bottom:4px;}
+.sidebar-mi{display:block;width:100%;background:none;border:none;text-align:left;padding:8px 14px;font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#111;cursor:pointer;transition:background .12s;border-left:3px solid transparent;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sidebar-mi:hover{background:var(--surface2);}
+.sidebar-mi.active{background:var(--accent-pale);border-left-color:var(--accent);color:var(--accent);}
+.sidebar-si{display:block;width:100%;background:none;border:none;text-align:left;padding:5px 14px 5px 24px;font-family:'Space Grotesk',sans-serif;font-size:11px;font-weight:500;color:var(--text2);cursor:pointer;transition:background .12s;border-left:3px solid transparent;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.sidebar-si:hover{background:var(--surface2);color:#111;}
+.sidebar-si.active{background:var(--accent-pale);border-left-color:var(--accent);color:var(--accent);font-weight:700;}
+.sidebar-empty{padding:16px 14px;font-size:11px;color:var(--text3);font-style:italic;font-family:'Space Grotesk',sans-serif;}
+/* Only show sidebar on step 1 */
+.sidebar{display:none;}
+.step1-active .sidebar{display:flex;}
+.main-wrap{flex:1;min-width:0;max-width:860px;padding:48px 24px 0;}
+.section-panel{display:none;}
+.section-panel.active{display:block;animation:fadeUp .22s ease;}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.section-eyebrow{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:42px;letter-spacing:.06em;color:#111;margin-bottom:10px;line-height:1;}
+.section-desc{font-size:14px;color:var(--text2);line-height:1.7;margin-bottom:36px;max-width:600px;padding-left:14px;border-left:3px solid var(--accent);}
+
+/* BLOCKS */
+.issue-block{background:#fff;border:2px solid #111;margin-bottom:24px;overflow:hidden;}
+.issue-block-header{background:#111;border-bottom:none;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;}
+.issue-block-label{font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:.1em;color:#fff;}
+.issue-block-body{padding:24px;}
+
+.subissue-block{background:#fff;border:2px solid var(--accent);margin-bottom:16px;overflow:hidden;}
+.subissue-header{background:var(--accent);padding:9px 18px;display:flex;align-items:center;justify-content:space-between;}
+.subissue-label{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:.1em;color:#fff;}
+.subissue-remove{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;cursor:pointer;font-size:16px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;transition:background .12s;}
+.subissue-remove:hover{background:rgba(255,255,255,.3);}
+
+/* TABS */
+.substep-tabs{display:flex;border-bottom:2px solid #111;background:var(--surface2);overflow-x:auto;}
+.substep-tab{padding:11px 18px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text2);cursor:pointer;border:none;border-right:1px solid #ddd;background:var(--surface2);border-bottom:3px solid transparent;margin-bottom:-2px;transition:all .15s;white-space:nowrap;flex-shrink:0;font-family:'Space Grotesk',sans-serif;}
+.substep-tab:hover{background:#e0e0e0;color:#111;}
+.substep-tab.active{color:#fff;background:var(--accent);border-bottom-color:var(--accent);}
+.substep-tab.tab-warn{color:var(--red);}
+.substep-tab.tab-warn.active{background:var(--red);border-bottom-color:var(--red);color:#fff;}
+.substep-panel{display:none;padding:22px;}
+.substep-panel.active{display:block;}
+
+/* FIELDS */
+.field-group{margin-bottom:20px;}
+.field-label{font-size:13px;font-weight:700;color:#111;margin-bottom:4px;display:block;letter-spacing:.01em;}
+.field-hint{font-size:12px;color:var(--text2);margin-bottom:7px;line-height:1.55;font-style:italic;}
+input[type="text"]{width:100%;font-family:'Space Grotesk',sans-serif;font-size:13.5px;color:#111;background:#fff;border:2px solid #ccc;padding:9px 12px;transition:border-color .15s;line-height:1.6;}
+input[type="text"]:focus{outline:none;border-color:var(--accent);}
+input[type="text"]::placeholder{color:#bbb;}
+
+/* RICH TEXT */
+.rich-editor-wrap{border:2px solid #ccc;overflow:hidden;transition:border-color .15s;}
+.rich-editor-wrap:focus-within{border-color:var(--accent);}
+.rich-toolbar{display:flex;gap:2px;padding:5px 8px;background:var(--surface2);border-bottom:1px solid #ddd;}
+.rich-btn{background:none;border:1px solid transparent;padding:3px 9px;font-size:12px;cursor:pointer;color:var(--text2);font-family:'Space Grotesk',sans-serif;transition:all .12s;font-weight:600;}
+.rich-btn:hover{background:#ddd;color:#111;border-color:#ccc;}
+.rich-content{min-height:72px;padding:10px 12px;font-family:'Space Grotesk',sans-serif;font-size:13.5px;color:#111;background:#fff;outline:none;line-height:1.6;}
+.rich-content.sm{min-height:48px;}
+.rich-content.lg{min-height:96px;}
+.rich-content:empty::before{content:attr(data-placeholder);color:#bbb;pointer-events:none;}
+
+/* CHECKLISTS */
+.checklist{display:flex;flex-direction:column;gap:10px;padding:14px 16px;background:var(--surface);border:2px solid #ddd;}
+.checklist-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text2);margin-bottom:2px;}
+.check-item,.radio-item{display:flex;align-items:flex-start;gap:9px;cursor:pointer;}
+.check-item input,.radio-item input{margin-top:3px;flex-shrink:0;width:15px;height:15px;accent-color:var(--accent);cursor:pointer;}
+.check-item span,.radio-item span{font-size:13.5px;color:#111;line-height:1.5;}
+
+/* CONDITIONAL */
+.conditional-block{display:none;background:var(--cond-bg);border:2px solid var(--cond-border);padding:15px 17px;margin-top:10px;}
+.conditional-block.visible{display:block;animation:fadeUp .18s ease;}
+.conditional-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text2);margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid #ddd;}
+
+/* FEEDBACK */
+.feedback-banner{display:none;padding:11px 15px;margin-top:10px;font-size:13px;line-height:1.5;align-items:flex-start;gap:9px;border-left:4px solid;}
+.feedback-banner.visible{display:flex;animation:fadeUp .15s ease;}
+.feedback-banner.ok{background:var(--green-bg);border-left-color:var(--green);}
+.feedback-banner.warn{background:var(--amber-bg);border-left-color:var(--amber);}
+.fb-icon{font-size:15px;flex-shrink:0;margin-top:1px;}
+.feedback-banner.ok .fb-icon{color:var(--green);}
+.feedback-banner.warn .fb-icon{color:var(--amber);}
+.fb-text{color:#111;}
+.feedback-banner.ok .fb-text strong{color:var(--green);}
+.feedback-banner.warn .fb-text strong{color:var(--amber);}
+
+/* CASE TABLE */
+.case-table{width:100%;border-collapse:collapse;font-size:13px;}
+.case-table th{background:var(--surface2);padding:8px 10px;text-align:left;font-size:10px;letter-spacing:.09em;text-transform:uppercase;color:var(--text2);font-weight:700;border:2px solid #ddd;}
+.case-table td{padding:0;border:1px solid #ddd;vertical-align:top;}
+.case-table td .rich-editor-wrap{border:none;}
+.case-table td .rich-editor-wrap:focus-within{box-shadow:none;border-bottom:2px solid var(--accent);}
+.case-table td .rich-toolbar{background:var(--surface2);border-bottom:1px solid #ddd;}
+.case-table td .rich-content{min-height:52px;font-size:13px;}
+.add-row-btn{background:none;border:2px dashed #ccc;padding:6px 12px;color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;margin-top:8px;transition:all .15s;font-family:'Space Grotesk',sans-serif;}
+.add-row-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+/* T-CHART */
+.tchart-wrap{display:grid;grid-template-columns:1fr 1fr;border:2px solid #ddd;overflow:hidden;margin-top:6px;}
+.tchart-col+.tchart-col{border-left:2px solid #ddd;}
+.tchart-head{background:var(--surface2);padding:8px 12px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text2);border-bottom:1px solid #ddd;}
+.tchart-cell .rich-editor-wrap{border:none;}
+.tchart-cell .rich-editor-wrap:focus-within{box-shadow:none;}
+.tchart-cell .rich-content{min-height:100px;background:#fff;}
+
+/* ANALOG CASE */
+.analog-case-block{border:2px solid #ddd;margin-bottom:12px;overflow:hidden;}
+.analog-case-header{background:var(--surface2);padding:8px 14px;font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text2);display:flex;justify-content:space-between;align-items:center;font-family:'Space Mono',monospace;border-bottom:1px solid #ddd;}
+.analog-case-body{padding:14px;}
+
+/* THESIS & WEAKNESS */
+.thesis-block,.weakness-block{border:2px solid #ddd;margin-bottom:14px;overflow:hidden;}
+.thesis-block-header,.weakness-header{background:var(--surface2);padding:9px 15px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #ddd;}
+.thesis-block-label,.weakness-label{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--text2);font-family:'Space Mono',monospace;}
+.thesis-block-body,.weakness-body{padding:15px;}
+
+/* MISC */
+.remove-btn{background:none;border:none;color:#aaa;cursor:pointer;font-size:20px;line-height:1;padding:2px 6px;transition:color .12s;}
+.remove-btn:hover{color:var(--red);}
+.field-divider{border:none;border-top:2px solid #eee;margin:18px 0;}
+.subissue-container-label{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text2);margin-bottom:12px;display:block;}
+
+/* BUTTONS */
+.add-btn{display:flex;align-items:center;gap:8px;background:none;border:2px dashed #ccc;padding:12px 20px;color:var(--text2);font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;cursor:pointer;width:100%;transition:all .15s;margin-bottom:24px;letter-spacing:.02em;}
+.add-btn:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-pale);}
+.add-btn-small{display:inline-flex;align-items:center;gap:6px;background:none;border:2px dashed #ccc;padding:6px 13px;color:var(--text2);font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;margin-bottom:14px;}
+.add-btn-small:hover{border-color:var(--accent);color:var(--accent);}
+.nav-row{display:flex;justify-content:space-between;align-items:center;padding:22px 0 0;border-top:2px solid #111;margin-top:8px;}
+.btn{font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:10px 24px;border:2px solid;cursor:pointer;transition:all .15s;}
+.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent);}
+.btn-primary:hover{background:var(--accent-light);border-color:var(--accent-light);}
+.btn-ghost{background:#fff;color:#111;border-color:#111;}
+.btn-ghost:hover{background:#111;color:#fff;}
+.btn-download{background:#fff;color:#111;border:2px solid #111;padding:9px 20px;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:all .15s;}
+.btn-download:hover{background:#111;color:#fff;}
+
+/* OUTLINE */
+.outline-wrap{background:#fff;border:2px solid #111;padding:36px 44px;}
+.outline-theme{font-size:14px;color:var(--text2);margin-bottom:24px;padding-bottom:20px;border-bottom:2px solid #111;line-height:1.7;}
+.outline-theme strong{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;display:block;margin-bottom:5px;color:var(--accent);}
+.outline-title{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.06em;margin-bottom:22px;color:#111;}
+.outline-empty{font-size:14px;color:var(--text3);font-style:italic;}
+.ol-main{list-style:none;padding:0;}
+.ol-main>li{margin-bottom:22px;}
+.ol-main>li>.ol-entry{font-family:'Space Grotesk',sans-serif;font-size:15px;font-weight:700;color:#111;line-height:1.5;}
+.ol-sub{list-style:none;padding-left:28px;margin-top:10px;}
+.ol-sub>li{margin-bottom:14px;}
+.ol-sub>li>.ol-entry{font-size:14px;color:#111;line-height:1.5;font-weight:600;}
+.ol-theses{list-style:none;padding-left:28px;margin-top:6px;}
+.ol-theses>li{font-size:13px;color:var(--text2);line-height:1.65;margin-bottom:6px;}
+.ol-label{font-family:'Space Mono',monospace;font-weight:700;margin-right:7px;color:var(--accent);}
+.ol-placeholder{color:#bbb;font-style:italic;}
+
+/* TOOLTIPS */
+.tip-label{border-bottom:1.5px dotted var(--accent);color:inherit;cursor:help;}
+#tipFloat{display:none;position:fixed;z-index:9999;background:#111;color:#fff;font-family:'Space Grotesk',sans-serif;font-size:12px;font-weight:400;line-height:1.55;padding:10px 14px;width:260px;box-shadow:0 4px 16px rgba(0,0,0,.3);pointer-events:none;text-transform:none;letter-spacing:0;font-style:normal;}
+.checklist{overflow:visible;}
+.substep-panel{overflow:visible;}
+
+/* SUBMISSION DOCUMENT */
+.sub-doc{background:#fff;border:2px solid #111;padding:56px 64px;font-family:Georgia,serif;color:#111;max-width:800px;margin:0 auto 40px;}
+.sub-doc-header{border-bottom:2px solid #111;padding-bottom:20px;margin-bottom:32px;}
+.sub-doc-title{font-family:Georgia,serif;font-size:22px;font-weight:700;letter-spacing:.02em;margin-bottom:10px;}
+.sub-doc-meta{font-size:12px;color:#555;font-family:'Space Mono',monospace;display:flex;gap:24px;flex-wrap:wrap;}
+.sub-doc-meta span{display:flex;align-items:center;gap:6px;}
+.sub-section{margin-bottom:36px;}
+.sub-theme-label{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:#888;margin-bottom:6px;}
+.sub-theme-text{font-size:14px;line-height:1.7;color:#111;}
+.sub-theme-meta{font-size:11px;color:#666;font-family:'Space Mono',monospace;margin-top:6px;}
+.sub-mi{margin-bottom:40px;}
+.sub-mi-heading{font-size:16px;font-weight:700;line-height:1.4;color:#111;margin-bottom:6px;display:flex;gap:10px;}
+.sub-mi-num{font-family:'Space Mono',monospace;color:var(--accent);flex-shrink:0;}
+.sub-mi-rule{font-size:13px;line-height:1.65;color:#333;margin-top:8px;padding:10px 14px;border-left:3px solid #ddd;background:#fafafa;}
+.sub-mi-rule-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#888;margin-bottom:4px;}
+.sub-si{margin:20px 0 20px 28px;border-left:2px solid var(--accent);padding-left:20px;}
+.sub-si-heading{font-size:14px;font-weight:700;line-height:1.45;color:#111;margin-bottom:5px;display:flex;gap:8px;}
+.sub-si-num{font-family:'Space Mono',monospace;color:var(--accent);flex-shrink:0;}
+.sub-si-meta{font-family:'Space Mono',monospace;font-size:10px;color:#888;letter-spacing:.06em;margin-bottom:12px;display:flex;gap:16px;flex-wrap:wrap;}
+.sub-si-meta span::before{content:'· ';color:#ccc;}
+.sub-si-meta span:first-child::before{content:'';}
+.sub-content-block{margin-bottom:18px;}
+.sub-content-label{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:#888;margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid #eee;}
+.sub-content-label.red{color:#c0392b;border-bottom-color:#f5c6c6;}
+.sub-rule-text{font-size:13px;line-height:1.7;color:#111;padding:10px 14px;border-left:3px solid #ddd;background:#fafafa;}
+.sub-thesis-item{margin-bottom:16px;padding-bottom:16px;border-bottom:1px solid #f0f0f0;}
+.sub-thesis-item:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.sub-thesis-n{font-family:'Space Mono',monospace;font-size:10px;color:#888;margin-bottom:4px;}
+.sub-thesis-text{font-size:13.5px;font-weight:700;line-height:1.5;color:#111;margin-bottom:6px;}
+.sub-thesis-citation{font-size:12px;color:#555;font-style:italic;margin-bottom:6px;}
+.sub-thesis-type{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:8px;}
+.sub-reasoning{margin-top:8px;padding:10px 14px;background:#f9f9f9;border:1px solid #eee;font-size:12.5px;line-height:1.65;color:#333;}
+.sub-reasoning-row{display:grid;grid-template-columns:120px 1fr;gap:8px 14px;align-items:start;margin-bottom:4px;}
+.sub-reasoning-row:last-child{margin-bottom:0;}
+.sub-reasoning-key{font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#888;padding-top:2px;}
+.sub-reasoning-val{font-size:12.5px;color:#111;line-height:1.6;}
+.sub-tchart{display:grid;grid-template-columns:1fr 1fr;border:1px solid #ddd;margin-top:6px;}
+.sub-tchart-col+.sub-tchart-col{border-left:1px solid #ddd;}
+.sub-tchart-head{background:#f0f0f0;padding:6px 10px;font-family:'Space Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#555;border-bottom:1px solid #ddd;}
+.sub-tchart-cell{padding:8px 10px;font-size:12.5px;line-height:1.6;color:#111;min-height:60px;}
+.sub-weakness-item{margin-bottom:16px;padding:12px 16px;border:1px solid #e8e8e8;background:#fafafa;}
+.sub-weakness-item:last-child{margin-bottom:0;}
+.sub-weakness-n{font-family:'Space Mono',monospace;font-size:10px;color:#888;margin-bottom:6px;}
+.sub-weakness-case{font-size:13px;font-weight:700;color:#111;margin-bottom:4px;}
+.sub-weakness-challenge{font-size:12.5px;color:#444;line-height:1.6;margin-bottom:8px;}
+.sub-weakness-approach{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#111;margin-bottom:8px;}
+.sub-empty{font-size:13px;color:#aaa;font-style:italic;padding:20px 0;}
+
+@media print {
+  .sub-doc{border:none!important;padding:0!important;max-width:100%!important;box-shadow:none!important;}
+  .sub-doc-header{border-bottom:1pt solid #111!important;}
+  .sub-si{border-left:1pt solid #555!important;}
+  .sub-rule-text,.sub-mi-rule{background:#f8f8f8!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .sub-weakness-item{background:#f8f8f8!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .sub-reasoning{background:#f5f5f5!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .sub-tchart-head{background:#eeeeee!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .sub-mi{break-inside:avoid;page-break-inside:avoid;}
+  .sub-thesis-item{break-inside:avoid;}
+  .sub-weakness-item{break-inside:avoid;}
+}
+
+@media print {
+  *{color:#111!important;background:white!important;border-color:#ccc!important;box-shadow:none!important;text-shadow:none!important;}
+  /* Restore dark headers — must come after the * rule to win the cascade */
+  .issue-block-header, .issue-block-header *{background:#111!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  .subissue-header, .subissue-header *{background:#1a56db!important;color:#fff!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  body{background:white!important;padding:0;font-size:10.5pt;font-family:Georgia,serif;}
+  .site-header,.progress-rail,.nav-row,.add-btn,.add-btn-small,.add-row-btn,
+  .remove-btn,.subissue-remove,.btn-download,.substep-tabs,.header-actions,
+  .rich-toolbar,.feedback-banner,.header-pill,.sidebar{display:none!important;}
+  .section-panel{display:block!important;}
+  .substep-panel{display:block!important;padding:6pt 0!important;}
+  .conditional-block{background:#f9f9f9!important;border:1px solid #ddd!important;}
+  .conditional-block:not(.visible){display:none!important;}
+  .main-wrap{max-width:100%;padding:0!important;}
+  .section-eyebrow,.section-desc{display:none;}
+  .section-title{font-size:18pt;margin-bottom:10pt;page-break-after:avoid;letter-spacing:.04em;}
+  .issue-block{border:2px solid #999!important;margin-bottom:14pt;break-inside:avoid;page-break-inside:avoid;}
+  .issue-block-header{background:#111!important;padding:5pt 10pt!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;page-break-after:avoid;}
+  .issue-block-label{font-size:10pt;color:#fff!important;}
+  .issue-block-body{padding:8pt!important;}
+  .subissue-block{border:2px solid #555!important;margin-bottom:10pt;break-inside:avoid;page-break-inside:avoid;}
+  .subissue-header{background:#1a56db!important;padding:4pt 10pt!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;page-break-after:avoid;}
+  .subissue-label{color:#fff!important;font-size:9pt;}
+  .print-tab-label{display:block!important;font-size:9pt;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:#555;margin-bottom:6pt;padding-bottom:4pt;border-bottom:1px solid #ccc;}
+  .thesis-block,.weakness-block,.analog-case-block{border:1px solid #ccc!important;break-inside:avoid;page-break-inside:avoid;margin-bottom:7pt;}
+  .thesis-block-header,.weakness-header,.analog-case-header{background:#eee!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;padding:4pt 8pt!important;border-bottom:1px solid #ccc!important;}
+  .thesis-block-label,.weakness-label{font-size:8pt;color:#444!important;}
+  .thesis-block-body,.weakness-body,.analog-case-body{padding:6pt!important;}
+  .rich-content{border:1px solid #ccc!important;padding:5pt 7pt!important;min-height:unset!important;font-size:10pt;font-family:Georgia,serif;}
+  .checklist{background:#f5f5f5!important;border:1px solid #ddd!important;padding:5pt 8pt!important;break-inside:avoid;gap:5px!important;}
+  .check-item span,.radio-item span{font-size:9.5pt;}
+  .conditional-label{font-size:8pt;color:#555!important;margin-bottom:6pt;padding-bottom:4pt;}
+  .tchart-wrap{border:1px solid #ccc!important;break-inside:avoid;page-break-inside:avoid;}
+  .tchart-head{background:#eee!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;font-size:8pt;padding:4pt 8pt!important;}
+  .tchart-cell .rich-content{min-height:55pt!important;border:none!important;}
+  .case-table th{background:#eee!important;-webkit-print-color-adjust:exact;print-color-adjust:exact;font-size:8pt;}
+  .case-table td .rich-content{min-height:36pt!important;font-size:9pt;}
+  .field-group{margin-bottom:6pt!important;}
+  .field-hint{font-size:8.5pt;margin-bottom:3pt!important;}
+  .field-label{font-size:9.5pt;margin-bottom:2pt!important;}
+  .field-divider{margin:6pt 0!important;}
+  .outline-wrap{border:none!important;padding:0!important;}
+  .outline-title{font-size:14pt;}
+  .ol-main>li>.ol-entry{font-size:12pt;}
+  .ol-sub>li>.ol-entry{font-size:11pt;}
+  .ol-theses>li{font-size:10pt;}
+}
+
+/* ===== WCAG 2.1 AA ACCESSIBILITY ===== */
+
+/* Skip navigation */
+.skip-nav{position:absolute;top:-100px;left:0;background:var(--accent);color:#fff;padding:10px 20px;font-size:14px;font-weight:700;z-index:10000;text-decoration:none;font-family:'Space Grotesk',sans-serif;}
+.skip-nav:focus{top:0;}
+
+/* Focus rings */
+*:focus-visible{outline:3px solid var(--accent);outline-offset:2px;}
+button:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:3px solid var(--accent);outline-offset:3px;}
+.rich-content:focus-visible{outline:3px solid var(--accent);outline-offset:-2px;}
+input[type="checkbox"]:focus-visible,input[type="radio"]:focus-visible{outline:3px solid var(--accent);outline-offset:2px;}
+input[type="text"]:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(26,86,219,.25);}
+
+/* Contrast fixes */
+:root{--text3:#666666;}
+.rich-content:empty::before{color:#767676;}
+input[type="text"]::placeholder{color:#767676;}
+.sidebar-empty{color:#666;}
+.ol-placeholder{color:#767676;}
+
+/* Touch targets */
+.remove-btn{min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;padding:0;}
+.subissue-remove{min-width:44px;min-height:44px;display:inline-flex;align-items:center;justify-content:center;}
+.rich-btn{min-width:36px;min-height:36px;display:inline-flex;align-items:center;justify-content:center;}
+.add-row-btn{min-height:44px;padding:0 16px;}
+.substep-tab{min-height:44px;}
+.progress-step{min-height:44px;}
+.sidebar-mi,.sidebar-si{min-height:44px;display:flex;align-items:center;}
+.sidebar-toggle{min-height:44px;}
+
+/* Reflow at 320px */
+@media (max-width:400px){
+  .page-body{padding:0 8px;}
+  .main-wrap{padding:24px 8px 0;}
+  .site-header{padding:0 12px;}
+  .progress-rail{padding:0 12px;gap:4px;}
+  .progress-divider{min-width:8px;margin:0 4px;}
+  .progress-step{font-size:9px;gap:5px;}
+  .issue-block-body{padding:12px;}
+  .substep-panel{padding:12px;}
+  .outline-wrap{padding:20px 16px;}
+  .sub-doc{padding:24px 16px;}
+  .tchart-wrap{grid-template-columns:1fr;}
+  .tchart-col+.tchart-col{border-left:none;border-top:2px solid #ddd;}
+  .sub-tchart{grid-template-columns:1fr;}
+  .sub-tchart-col+.sub-tchart-col{border-left:none;border-top:1px solid #ddd;}
+  .substep-tabs{flex-wrap:wrap;}
+  .nav-row{flex-direction:column;gap:10px;align-items:stretch;}
+  .nav-row .btn{text-align:center;}
+}
+
+/* High contrast mode */
+@media (forced-colors:active){
+  .feedback-banner{border:2px solid ButtonText;}
+  .tip-label{border-bottom:2px solid LinkText;}
+  #tipFloat{border:2px solid ButtonText;}
+}
+
+</style>
+</head>
+<body>
+
+<a href="#main-content" class="skip-nav">Skip to main content</a>
+<div id="sr-announcer" aria-live="polite" aria-atomic="true" style="position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden;"></div>
+
+<header class="site-header" role="banner">
+  <h1>Outlining the Argument</h1>
+  <div class="header-actions">
+    <div class="header-pill"><span class="header-dot"></span><span class="save-status" id="saveStatus">Auto-saving</span></div>
+  </div>
+</header>
+
+<nav class="progress-rail" aria-label="Form steps">
+  <div class="progress-step active" role="button" tabindex="0" aria-current="step" onclick="goToStep(0)" onkeydown="if(event.key==='Enter'||event.key===' ')goToStep(0)"><span class="step-num">1</span> Theme</div>
+  <div class="progress-divider"></div>
+  <div class="progress-step" role="button" tabindex="0" onclick="goToStep(1)" onkeydown="if(event.key==='Enter'||event.key===' ')goToStep(1)"><span class="step-num">2</span> Main Issues &amp; Sub-Issues</div>
+  <div class="progress-divider"></div>
+  <div class="progress-step" role="button" tabindex="0" onclick="goToStep(2)" onkeydown="if(event.key==='Enter'||event.key===' ')goToStep(2)"><span class="step-num">3</span> Outline</div>
+  <div class="progress-divider"></div>
+  <div class="progress-step" role="button" tabindex="0" onclick="goToStep(3)" onkeydown="if(event.key==='Enter'||event.key===' ')goToStep(3)"><span class="step-num">4</span> Download Submission</div>
+</nav>
+
+<div id="tipFloat"></div>
+<div class="page-body" id="pageBody">
+<aside class="sidebar" id="sidebar" aria-label="Issue navigation">
+  <button class="sidebar-toggle" onclick="toggleSidebar()" aria-label="Toggle issue navigation" aria-expanded="false" id="sidebarToggleBtn">
+    <span class="toggle-icon">◀</span>
+    <span class="toggle-label">Nav</span>
+  </button>
+  <div class="sidebar-nav" id="sidebarNav">
+    <div class="sidebar-empty">Add issues to see navigation.</div>
+  </div>
+</aside>
+<main class="main-wrap" id="main-content" tabindex="-1">
+
+  <div class="section-panel active" id="step-0" role="region" aria-labelledby="step-0-title">
+    <div class="section-eyebrow">Step 1 of 4</div>
+    <h2 class="section-title" id="step-0-title">Theme</h2>
+    <p class="section-desc">A theme is a unifying idea that quickly and simply explains why the court should rule in your client's favor.</p>
+    <div class="issue-block">
+      <div class="issue-block-body">
+        <div class="field-group">
+          <label class="field-label">Theme</label>
+          <div class="rich-editor-wrap"><div class="rich-toolbar"><button class="rich-btn" aria-label="Bold" onmousedown="event.preventDefault();applyFmt('bold')"><b aria-hidden="true">B</b></button><button class="rich-btn" aria-label="Italic" onmousedown="event.preventDefault();applyFmt('italic')"><i aria-hidden="true">I</i></button><button class="rich-btn" aria-label="Underline" onmousedown="event.preventDefault();applyFmt('underline')"><u aria-hidden="true">U</u></button></div><div class="rich-content lg" id="theme-main" role="textbox" aria-multiline="true" aria-label="Type your theme here" contenteditable="true" data-placeholder="Type your theme here…" oninput="autoSave();refreshOutline();" onkeydown="if(event.key==='Escape')this.blur();"></div></div>
+        </div>
+        <div class="field-group">
+          <div class="checklist-label" style="margin-bottom:6px;">My theme is based on <span style="font-weight:400;text-transform:none;letter-spacing:0">(select all that apply)</span></div>
+          <div class="checklist">
+            <label class="check-item"><input type="checkbox" id="theme-src-1" onchange="autoSave()"><span>A social good or value</span></label>
+            <label class="check-item"><input type="checkbox" id="theme-src-2" onchange="autoSave()"><span>Substantive law</span></label>
+            <label class="check-item"><input type="checkbox" id="theme-src-3" onchange="autoSave()"><span>Procedural law</span></label>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-row"><span></span><button class="btn btn-primary" onclick="goToStep(1)">Continue to Main Issues →</button></div>
+  </div>
+
+  <div class="section-panel" id="step-1" role="region" aria-labelledby="step-1-title">
+    <div class="section-eyebrow">Step 2 of 4</div>
+    <h2 class="section-title" id="step-1-title">Main Issues &amp; Sub-Issues</h2>
+    <p class="section-desc">Complete a block for each primary argument. Within each Main Issue, add Sub-Issues and work through each tab.</p>
+    <div id="mainIssueContainer" role="list" aria-label="Main issues"></div>
+    <button class="add-btn" onclick="addMainIssue()"><span>+</span> Add Another Main Issue</button>
+    <div class="nav-row"><button class="btn btn-ghost" onclick="goToStep(0)">← Back</button><button class="btn btn-primary" onclick="goToStep(2)">View Outline →</button></div>
+  </div>
+
+  <div class="section-panel" id="step-2" role="region" aria-labelledby="step-2-title">
+    <div class="section-eyebrow">Step 3 of 4</div>
+    <h2 class="section-title" id="step-2-title">Traditional Outline</h2>
+    <p class="section-desc">Generated automatically from your inputs. Return to Step 2 to make changes — the outline updates instantly.</p>
+    <div class="outline-wrap" id="outlineContent"></div>
+    <div style="margin-top:24px;padding:16px 20px;border:2px solid #ddd;background:var(--surface)">
+      <label class="check-item" style="align-items:flex-start;gap:10px;cursor:pointer">
+        <input type="checkbox" id="outlineReviewed" onchange="chkOutlineReview()" aria-describedby="outlineReviewBanner" style="margin-top:3px;width:16px;height:16px;accent-color:var(--accent);flex-shrink:0;cursor:pointer">
+        <span style="font-size:13.5px;color:var(--text);line-height:1.5">I have reviewed my traditional outline, and the outline accurately and persuasively captures my argument.</span>
+      </label>
+      <div class="feedback-banner warn visible" id="outlineReviewBanner" style="margin-top:12px" aria-live="polite" role="status">
+        <span class="fb-icon">○</span>
+        <span class="fb-text"><strong>Review your outline before continuing.</strong> Once you're satisfied it accurately and persuasively captures your argument, check the box above.</span>
+      </div>
+    </div>
+    <div class="nav-row"><button class="btn btn-ghost" onclick="goToStep(1)">← Back to Issues</button><button class="btn btn-primary" onclick="goToStep(3)">Download Submission →</button></div>
+  </div>
+
+  <div class="section-panel" id="step-3" role="region" aria-labelledby="step-3-title">
+    <div class="section-eyebrow">Step 4 of 4</div>
+    <h2 class="section-title" id="step-3-title">Download Submission</h2>
+    <p class="section-desc">This is your submission document. Review it, then download it as a PDF to submit to your instructor.</p>
+    <div id="submissionDoc"></div>
+    <div class="nav-row"><button class="btn btn-ghost" onclick="goToStep(2)">← Back to Outline</button><button class="btn btn-primary" onclick="downloadSubmission()">↓ Download PDF</button></div>
+  </div>
+
+</main>
+</div><!-- /page-body -->
+
+<script>
+const ROMAN=['I','II','III','IV','V','VI','VII','VIII','IX','X'];
+const ALPHA=['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z'];
+const LOWER=['a','b','c','d','e','f','g','h','i','j','k','l','m','n','o','p','q','r','s','t','u','v','w','x','y','z'];
+const toR=n=>ROMAN[n-1]||n, toA=n=>ALPHA[n-1]||n, toL=n=>LOWER[n-1]||n;
+
+let miCount=0, siC={}, tcC={}, wkC={}, acC={};
+
+
+/* SCREEN READER ANNOUNCER */
+function announce(msg,priority){
+  const el=document.getElementById('sr-announcer');
+  if(!el)return;
+  el.setAttribute('aria-live',priority||'polite');
+  el.textContent='';
+  setTimeout(()=>{el.textContent=msg;},50);
+}
+
+/* NAV */
+function goToStep(n){
+  document.querySelectorAll('.section-panel').forEach((p,i)=>p.classList.toggle('active',i===n));
+  document.querySelectorAll('.progress-step').forEach((s,i)=>{
+    s.classList.remove('active','done');
+    s.removeAttribute('aria-current');
+    if(i===n){s.classList.add('active');s.setAttribute('aria-current','step');}
+    else if(i<n)s.classList.add('done');
+  });
+  document.getElementById('pageBody').classList.toggle('step1-active',n===1);
+  // Update sidebar toggle aria-expanded
+  const sbt=document.getElementById('sidebarToggleBtn');
+  if(sbt)sbt.setAttribute('aria-expanded',n===1?'true':'false');
+  if(n===2)doOutline();
+  if(n===3)buildSubmission();
+  window.scrollTo({top:0,behavior:'smooth'});
+  // Move focus to step heading
+  setTimeout(()=>{
+    const heading=document.getElementById(`step-${n}-title`);
+    if(heading){heading.setAttribute('tabindex','-1');heading.focus();}
+  },100);
+  const stepNames=['Theme','Main Issues and Sub-Issues','Traditional Outline','Download Submission'];
+  announce(`Step ${n+1} of 4: ${stepNames[n]}`);
+  saveAll();
+}
+
+/* ===================== SUBMISSION DOCUMENT ===================== */
+function getHTML(id){const e=document.getElementById(id);return e?e.innerHTML.trim():'';}
+function getTxt(id){const e=document.getElementById(id);return e?(e.innerText||e.textContent||'').trim():'';}
+
+function buildSubmission(){
+  const el=document.getElementById('submissionDoc');
+  if(!el)return;
+
+  // Theme
+  const themeHTML=getHTML('theme-main')||'<em style="color:#aaa">No theme entered.</em>';
+  const themeBases=[];
+  if(document.getElementById('theme-src-1')?.checked)themeBases.push('Social good or value');
+  if(document.getElementById('theme-src-2')?.checked)themeBases.push('Substantive law');
+  if(document.getElementById('theme-src-3')?.checked)themeBases.push('Procedural law');
+  const themeMeta=themeBases.length?`Theme basis: ${themeBases.join(', ')}`:'';
+
+  let html=`<div class="sub-doc">`;
+
+  // Document header
+  html+=`<div class="sub-doc-header">
+    <div class="sub-doc-title">Annotated Argument Outline</div>
+    <div class="sub-doc-meta">
+      <span>Date: ${new Date().toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'})}</span>
+    </div>
+  </div>`;
+
+  // Theme section
+  html+=`<div class="sub-section">
+    <div class="sub-theme-label">Theme</div>
+    <div class="sub-theme-text">${themeHTML}</div>
+    ${themeMeta?`<div class="sub-theme-meta">${themeMeta}</div>`:''}
+  </div>`;
+
+  // Main issues
+  const mis=document.querySelectorAll('#mainIssueContainer > .issue-block');
+  if(!mis.length){html+=`<div class="sub-empty">No main issues added yet.</div>`;}
+
+  mis.forEach((mb,mi)=>{
+    const idx=mi+1;
+    const miHd=getHTML(`mi-${idx}-hd`)||`<em style="color:#aaa">[Main Issue ${toR(idx)} heading not entered]</em>`;
+    const miRule=getHTML(`mi-${idx}-rule`)||'';
+
+    html+=`<div class="sub-mi">`;
+    html+=`<div class="sub-mi-heading"><span class="sub-mi-num">${toR(idx)}.</span><span>${miHd}</span></div>`;
+    if(miRule){
+      html+=`<div class="sub-mi-rule"><div class="sub-mi-rule-label">Rule of Law</div>${miRule}</div>`;
+    }
+
+    // Sub-issues — read actual IDs from DOM to handle deletions/renumbering
+    const sic=document.getElementById(`sic-${idx}`);
+    if(sic){
+      sic.querySelectorAll(':scope > .subissue-block').forEach((sb,si)=>{
+        // uid is encoded in the subissue-block id as "sib-{uid}"
+        const uid=sb.id.replace('sib-','');
+        html+=buildSIDoc(uid,si+1);
+      });
+    }
+    html+=`</div>`;
+  });
+
+  html+=`</div>`;
+  el.innerHTML=html;
+}
+
+function buildSIDoc(uid,siNum){
+  let h=`<div class="sub-si">`;
+
+  // Heading
+  const siHd=getHTML(`${uid}-hd`)||`<em style="color:#aaa">[Sub-Issue ${toA(siNum)} heading not entered]</em>`;
+  h+=`<div class="sub-si-heading"><span class="sub-si-num">${toA(siNum)}.</span><span>${siHd}</span></div>`;
+
+  // Metadata line
+  const meta=[];
+  const hdType=document.querySelector(`input[name="${uid}-ht"]:checked`)?.value;
+  if(hdType==='a')meta.push('Heading: Assertive');
+  else if(hdType==='d')meta.push('Heading: Descriptive');
+  const isExpl=document.getElementById(`${uid}-expl`)?.checked;
+  const isImpl=document.getElementById(`${uid}-impl`)?.checked;
+  if(isExpl&&isImpl)meta.push('Rule type: Explicit + Implicit');
+  else if(isExpl)meta.push('Rule type: Explicit');
+  else if(isImpl)meta.push('Rule type: Implicit');
+  if(meta.length) h+=`<div class="sub-si-meta">${meta.map(m=>`<span>${m}</span>`).join('')}</div>`;
+
+  // Rule of Law
+  const rule=getHTML(`${uid}-rule`);
+  if(rule){
+    h+=`<div class="sub-content-block">
+      <div class="sub-content-label">Rule of Law</div>
+      <div class="sub-rule-text">${rule}</div>
+    </div>`;
+  }
+
+  // Explanation
+  const expTheses=buildExpDoc(uid);
+  if(expTheses){
+    h+=`<div class="sub-content-block">
+      <div class="sub-content-label">Explanation</div>
+      ${expTheses}
+    </div>`;
+  }
+
+  // Application
+  const appTheses=buildAppDoc(uid);
+  if(appTheses){
+    h+=`<div class="sub-content-block">
+      <div class="sub-content-label">Application</div>
+      ${appTheses}
+    </div>`;
+  }
+
+  // Weaknesses
+  const wks=buildWKDoc(uid);
+  if(wks){
+    h+=`<div class="sub-content-block">
+      <div class="sub-content-label red">Weaknesses</div>
+      ${wks}
+    </div>`;
+  }
+
+  h+=`</div>`;
+  return h;
+}
+
+function buildExpDoc(uid){
+  const container=document.getElementById(`etc-${uid}`);
+  if(!container)return'';
+  const blocks=container.querySelectorAll('.thesis-block');
+  if(!blocks.length)return'';
+  let h='';
+  blocks.forEach((b,i)=>{
+    const thesis=getHTML(`${b.id}-t`);
+    const citation=getHTML(`${b.id}-auth`);
+    if(!thesis&&!citation)return;
+    h+=`<div class="sub-thesis-item">
+      <div class="sub-thesis-n">Explanation Thesis ${i+1}</div>
+      ${thesis?`<div class="sub-thesis-text">${thesis}</div>`:''}
+      ${citation?`<div class="sub-thesis-citation">${citation}</div>`:''}
+    </div>`;
+  });
+  return h;
+}
+
+function buildAppDoc(uid){
+  const container=document.getElementById(`atc-${uid}`);
+  if(!container)return'';
+  const blocks=container.querySelectorAll('.thesis-block');
+  if(!blocks.length)return'';
+  let h='';
+  blocks.forEach((b,i)=>{
+    const thesis=getHTML(`${b.id}-t`);
+    const appType=document.querySelector(`input[name="${b.id}-at"]:checked`)?.value;
+    const typeLabels={an:'Analogical Reasoning',rb:'Rule-Based Reasoning',pb:'Policy-Based Reasoning'};
+    const typeLabel=appType?typeLabels[appType]:'';
+    if(!thesis&&!typeLabel)return;
+    h+=`<div class="sub-thesis-item">
+      <div class="sub-thesis-n">Application Thesis ${i+1}</div>
+      ${thesis?`<div class="sub-thesis-text">${thesis}</div>`:''}
+      ${typeLabel?`<div class="sub-thesis-type">${typeLabel}</div>`:''}
+      ${appType==='rb'?buildSyllogismDoc(b.id):''}
+      ${appType==='an'?buildAnalogDoc(b.id):''}
+      ${appType==='pb'?buildPolicyDoc(b.id):''}
+    </div>`;
+  });
+  return h;
+}
+
+function buildSyllogismDoc(tid){
+  const auth=getHTML(`${tid}-rba`);
+  const maj=getHTML(`${tid}-maj`);
+  const min=getHTML(`${tid}-min`);
+  const con=getHTML(`${tid}-con`);
+  if(!auth&&!maj&&!min&&!con)return'';
+  const rows=[];
+  if(auth)rows.push(['Authority',auth]);
+  if(maj)rows.push(['Major Premise',maj]);
+  if(min)rows.push(['Minor Premise',min]);
+  if(con)rows.push(['Conclusion',con]);
+  return`<div class="sub-reasoning">${rows.map(([k,v])=>`<div class="sub-reasoning-row"><div class="sub-reasoning-key">${k}</div><div class="sub-reasoning-val">${v}</div></div>`).join('')}</div>`;
+}
+
+function buildAnalogDoc(tid){
+  const container=document.getElementById(`acc-${tid}`);
+  if(!container)return'';
+  const cases=container.querySelectorAll('.analog-case-block');
+  if(!cases.length)return'';
+  let h='';
+  cases.forEach((c,i)=>{
+    const cit=getHTML(`${c.id}-cit`);
+    const simType=document.querySelector(`input[name="${c.id}-st"]:checked`)?.value;
+    const simLabel=simType==='sim'?'Similar to my client\'s case':simType==='dis'?'Distinguishable from my client\'s case':'';
+    const precFacts=getTxt(`${c.id}-pf`);
+    const clientFacts=getTxt(`${c.id}-cf`);
+    h+=`<div class="sub-reasoning" style="margin-bottom:8px">
+      ${cit?`<div class="sub-reasoning-row"><div class="sub-reasoning-key">Case</div><div class="sub-reasoning-val">${cit}</div></div>`:''}
+      ${simLabel?`<div class="sub-reasoning-row"><div class="sub-reasoning-key">Argument</div><div class="sub-reasoning-val">${simLabel}</div></div>`:''}
+      ${(precFacts||clientFacts)?`<div class="sub-tchart" style="margin-top:8px">
+        <div class="sub-tchart-col"><div class="sub-tchart-head">Precedent Case Facts</div><div class="sub-tchart-cell">${getHTML(`${c.id}-pf`)||''}</div></div>
+        <div class="sub-tchart-col"><div class="sub-tchart-head">Client's Case Facts</div><div class="sub-tchart-cell">${getHTML(`${c.id}-cf`)||''}</div></div>
+      </div>`:''}
+    </div>`;
+  });
+  return h;
+}
+
+function buildPolicyDoc(tid){
+  const interest=getHTML(`${tid}-pi`);
+  const citation=getHTML(`${tid}-pc`);
+  const apply=getHTML(`${tid}-pa`);
+  if(!interest&&!citation&&!apply)return'';
+  const rows=[];
+  if(interest)rows.push(['Policy Interest',interest]);
+  if(citation)rows.push(['Authority',citation]);
+  if(apply)rows.push(['Application',apply]);
+  return`<div class="sub-reasoning">${rows.map(([k,v])=>`<div class="sub-reasoning-row"><div class="sub-reasoning-key">${k}</div><div class="sub-reasoning-val">${v}</div></div>`).join('')}</div>`;
+}
+
+function buildWKDoc(uid){
+  const container=document.getElementById(`wkc-${uid}`);
+  if(!container)return'';
+  const blocks=container.querySelectorAll('.weakness-block');
+  if(!blocks.length)return'';
+  let h='';
+  blocks.forEach((b,i)=>{
+    const caseRef=getHTML(`${b.id}-case`);
+    const challenge=getHTML(`${b.id}-ch`);
+    const approach=document.querySelector(`input[name="${b.id}-ap"]:checked`)?.value;
+    const approachLabels={
+      br:'Advancing a broader rule',
+      nr:'Advancing a narrower rule',
+      di:'Distinguishing on the facts'
+    };
+    const approachLabel=approach?approachLabels[approach]:'';
+    if(!caseRef&&!challenge)return;
+
+    // Additional detail based on approach
+    let detail='';
+    if(approach==='di'){
+      const precFacts=getTxt(`${b.id}-pf`);
+      const clientFacts=getTxt(`${b.id}-cf`);
+      const contradict=document.querySelector(`input[name="${b.id}-cd"]:checked`)?.value;
+      if(precFacts||clientFacts){
+        detail=`<div class="sub-tchart" style="margin-top:8px">
+          <div class="sub-tchart-col"><div class="sub-tchart-head">Precedent Case Facts</div><div class="sub-tchart-cell">${getHTML(`${b.id}-pf`)||''}</div></div>
+          <div class="sub-tchart-col"><div class="sub-tchart-head">Distinguishing Facts</div><div class="sub-tchart-cell">${getHTML(`${b.id}-cf`)||''}</div></div>
+        </div>`;
+        if(contradict)detail+=`<div style="font-family:'Space Mono',monospace;font-size:10px;color:#888;margin-top:6px;letter-spacing:.06em;">Contradicting cases: ${contradict==='y'?'Yes — addressed in argument':'None identified'}</div>`;
+      }
+    } else if(approach==='br'||approach==='nr'){
+      const commonSense=document.querySelector(`input[name="${b.id}-cs"]:checked`)?.value;
+      const outlier=document.querySelector(`input[name="${b.id}-ol"]:checked`)?.value;
+      const notes=[];
+      if(commonSense)notes.push(`Common sense test: ${commonSense==='y'?'Passes':'Does not pass'}`);
+      if(outlier)notes.push(`Non-fitting case is outlier: ${outlier==='y'?'Yes':'No'}`);
+      if(notes.length)detail=`<div style="font-family:'Space Mono',monospace;font-size:10px;color:#888;margin-top:6px;letter-spacing:.06em;">${notes.join(' · ')}</div>`;
+    }
+
+    h+=`<div class="sub-weakness-item">
+      <div class="sub-weakness-n">Weakness ${i+1}</div>
+      ${caseRef?`<div class="sub-weakness-case">${caseRef}</div>`:''}
+      ${challenge?`<div class="sub-weakness-challenge">${challenge}</div>`:''}
+      ${approachLabel?`<div class="sub-weakness-approach">Approach: ${approachLabel}</div>`:''}
+      ${detail}
+    </div>`;
+  });
+  return h;
+}
+
+function downloadSubmission(){
+  buildSubmission();
+  const doc=document.getElementById('submissionDoc');
+  if(!doc)return;
+  doc.classList.add('printing');
+  const style=document.createElement('style');
+  style.id='sub-print-override';
+  style.textContent=`
+    @media print {
+      body > *:not(.page-body) { display: none !important; }
+      .site-header, .progress-rail, .page-body > .sidebar { display: none !important; }
+      .section-panel { display: none !important; }
+      #step-3 { display: block !important; }
+      .section-eyebrow, .section-title, .section-desc, .nav-row { display: none !important; }
+      .main-wrap { padding: 0 !important; max-width: 100% !important; }
+      .sub-doc { border: none !important; padding: 0 !important; }
+    }
+  `;
+  document.head.appendChild(style);
+  window.print();
+  setTimeout(()=>{
+    document.getElementById('sub-print-override')?.remove();
+    doc.classList.remove('printing');
+  },1500);
+}
+
+/* SIDEBAR */
+function toggleSidebar(){
+  const sb=document.getElementById('sidebar');
+  const btn=document.getElementById('sidebarToggleBtn');
+  const collapsed=sb.classList.toggle('collapsed');
+  if(btn)btn.setAttribute('aria-expanded',collapsed?'false':'true');
+}
+
+function buildSidebar(){
+  const nav=document.getElementById('sidebarNav');
+  if(!nav)return;
+  const mis=document.querySelectorAll('#mainIssueContainer > .issue-block');
+  if(!mis.length){nav.innerHTML='<div class="sidebar-empty">Add issues to see navigation.</div>';return;}
+  let html='';
+  mis.forEach((mb,mi)=>{
+    const idx=mi+1;
+    const heading=rt(`mi-${idx}-hd`)||`Main Issue ${toR(idx)}`;
+    const truncated=heading.length>22?heading.slice(0,22)+'…':heading;
+    html+=`<div class="sidebar-section">`;
+    html+=`<button class="sidebar-mi" id="snav-mi-${idx}" onclick="scrollToMI(${idx})" title="${heading.replace(/"/g,'&quot;')}">${toR(idx)}. ${truncated}</button>`;
+    const sic=document.getElementById(`sic-${idx}`);
+    if(sic){
+      sic.querySelectorAll(':scope > .subissue-block').forEach((sb,si)=>{
+        const uid=sb.id.replace('sib-','');
+        const shd=rt(`${uid}-hd`)||`Sub-Issue ${toA(si+1)}`;
+        const strunc=shd.length>20?shd.slice(0,20)+'…':shd;
+        html+=`<button class="sidebar-si" id="snav-si-${uid}" onclick="scrollToSI('${uid}')" title="${shd.replace(/"/g,'&quot;')}">${toA(si+1)}. ${strunc}</button>`;
+      });
+    }
+    html+=`</div>`;
+  });
+  nav.innerHTML=html;
+}
+
+function scrollToMI(idx){
+  const el=document.getElementById(`mi-${idx}`);
+  if(!el)return;
+  const top=el.getBoundingClientRect().top+window.scrollY-72;
+  window.scrollTo({top,behavior:'smooth'});
+}
+
+function scrollToSI(uid){
+  const el=document.getElementById(`sib-${uid}`);
+  if(!el)return;
+  const top=el.getBoundingClientRect().top+window.scrollY-72;
+  window.scrollTo({top,behavior:'smooth'});
+}
+
+function updateSidebarActive(){
+  if(!document.getElementById('step-1').classList.contains('active'))return;
+  const scrollY=window.scrollY+120;
+  let activeEl=null;
+  // check all anchors in order, find last one above scroll position
+  document.querySelectorAll('#mainIssueContainer > .issue-block').forEach((mb,mi)=>{
+    const idx=mi+1;
+    if(mb.getBoundingClientRect().top+window.scrollY<=scrollY) activeEl=`snav-mi-${idx}`;
+    const sic=document.getElementById(`sic-${idx}`);
+    if(sic) sic.querySelectorAll(':scope > .subissue-block').forEach((sb,si)=>{
+      const uid=sb.id.replace('sib-','');
+      if(sb.getBoundingClientRect().top+window.scrollY<=scrollY) activeEl=`snav-si-${uid}`;
+    });
+  });
+  document.querySelectorAll('.sidebar-mi,.sidebar-si').forEach(b=>b.classList.remove('active'));
+  if(activeEl) document.getElementById(activeEl)?.classList.add('active');
+}
+
+/* RICH TEXT */
+function re(id,ph,cls){
+  return `<div class="rich-editor-wrap"><div class="rich-toolbar" role="toolbar" aria-label="Text formatting"><button class="rich-btn" aria-label="Bold" onmousedown="event.preventDefault();applyFmt('bold')"><b aria-hidden="true">B</b></button><button class="rich-btn" aria-label="Italic" onmousedown="event.preventDefault();applyFmt('italic')"><i aria-hidden="true">I</i></button><button class="rich-btn" aria-label="Underline" onmousedown="event.preventDefault();applyFmt('underline')"><u aria-hidden="true">U</u></button></div><div class="rich-content${cls?' '+cls:''}" id="${id}" role="textbox" aria-multiline="true" aria-label="${ph}" contenteditable="true" data-placeholder="${ph}" oninput="autoSave();refreshOutline();" onkeydown="if(event.key==='Escape')this.blur();"></div></div>`;
+}
+function applyFmt(c){document.execCommand(c,false,null);}
+function rt(id){const e=document.getElementById(id);return e?(e.innerText||e.textContent||'').trim():'';}
+function rh(id){const e=document.getElementById(id);return e?e.innerHTML:'';}
+function srh(id,h){const e=document.getElementById(id);if(e)e.innerHTML=h||'';}
+
+/* FEEDBACK */
+function fb(id,type,icon,msg){
+  const e=document.getElementById(id);if(!e)return;
+  e.className=`feedback-banner ${type} visible`;
+  e.setAttribute('role','status');
+  e.setAttribute('aria-live','polite');
+  e.innerHTML=`<span class="fb-icon" aria-hidden="true">${icon}</span><span class="fb-text">${msg}</span>`;
+}
+function hfb(id){const e=document.getElementById(id);if(e){e.className='feedback-banner';e.removeAttribute('role');e.innerHTML='';}}
+
+/* MAIN ISSUE */
+function addMainIssue(){
+  miCount++;const idx=miCount;siC[idx]=0;
+  const el=document.createElement('div');
+  el.className='issue-block';el.id=`mi-${idx}`;el.setAttribute('role','listitem');
+  el.innerHTML=miHTML(idx);
+  document.getElementById('mainIssueContainer').appendChild(el);
+  renumMI();addSubIssue(idx);
+  el.scrollIntoView({behavior:'smooth',block:'start'});
+  buildSidebar();
+  announce(`Main Issue ${toR(idx)} added`);
+  setTimeout(()=>{
+    const hd=document.getElementById(`mi-${idx}-hd`);
+    if(hd){hd.setAttribute('tabindex','-1');hd.focus();}
+  },150);
+}
+
+function miHTML(idx){return `
+  <div class="issue-block-header">
+    <span class="issue-block-label" id="mil-${idx}">Main Issue ${toR(idx)}</span>
+    ${idx>1?`<button class="remove-btn" onclick="remMI(${idx})" aria-label="Remove Main Issue ${toR(idx)}"><span aria-hidden="true">×</span></button>`:''}
+  </div>
+  <div class="issue-block-body">
+    <div class="field-group">
+      <label class="field-label">Assertive Main Point Heading</label>
+      <div class="field-hint">A persuasive, complete sentence stating the action I want the court to take and the primary reason it should. Three lines or fewer.</div>
+      ${re(`mi-${idx}-hd`,'Type your main point heading here…','lg')}
+    </div>
+    <div class="field-group">
+      <div class="checklist-label" style="margin-bottom:6px">My main point heading (check each that applies)</div>
+      <div class="checklist">
+        <label class="check-item"><input type="checkbox" id="mi-${idx}-h1" onchange="chkMIHd(${idx});autoSave()"><span>States the action I want the court to take or the conclusion I want the court to reach.</span></label>
+        <label class="check-item"><input type="checkbox" id="mi-${idx}-h2" onchange="chkMIHd(${idx});autoSave()"><span>States the primary reason the court should take that action or reach that conclusion.</span></label>
+        <label class="check-item"><input type="checkbox" id="mi-${idx}-h3" onchange="chkMIHd(${idx});autoSave()"><span>Is three lines or fewer.</span></label>
+        <label class="check-item"><input type="checkbox" id="mi-${idx}-h4" onchange="chkMIHd(${idx});autoSave()"><span>Is a complete sentence with final punctuation.</span></label>
+      </div>
+      <div class="feedback-banner" id="mi-${idx}-hfb"></div>
+    </div>
+    <div class="field-group">
+      <label class="field-label">Rule of Law for Main Issue ${toR(idx)}</label>
+      <div class="field-hint">Include a fully articulated rule of law governing the main issue, with citations in Bluebook form.</div>${re(`mi-${idx}-rule`,'Type your rule of law here…','lg')}
+    </div>
+    <hr class="field-divider">
+    <span class="subissue-container-label" id="silh-${idx}">Sub-Issues for Main Issue ${toR(idx)}</span>
+    <div id="sic-${idx}" role="list" aria-label="Sub-issues for Main Issue ${toR(idx)}"></div>
+    <button class="add-btn-small" onclick="addSubIssue(${idx})">+ Add Sub-Issue</button>
+  </div>`;}
+
+function chkMIHd(idx){
+  const has=rt(`mi-${idx}-hd`).length>0;
+  if(!has){hfb(`mi-${idx}-hfb`);return;}
+  const all=['h1','h2','h3','h4'].every(h=>document.getElementById(`mi-${idx}-${h}`)?.checked);
+  all?fb(`mi-${idx}-hfb`,'ok','✓','<strong>Heading looks good.</strong> Your main point heading meets all the criteria.'):fb(`mi-${idx}-hfb`,'warn','○','<strong>Review your heading.</strong> Make sure it meets all of the checklist items before moving on.');
+}
+function remMI(idx){const label=`Main Issue ${toR(idx)}`;document.getElementById(`mi-${idx}`)?.remove();renumMI();autoSave();refreshOutline();buildSidebar();announce(`${label} removed`);}
+function renumMI(){
+  document.querySelectorAll('#mainIssueContainer > .issue-block').forEach((b,i)=>{
+    const l=b.querySelector('.issue-block-label');if(l)l.textContent=`Main Issue ${toR(i+1)}`;
+    const s=b.querySelector('.subissue-container-label');if(s)s.textContent=`Sub-Issues for Main Issue ${toR(i+1)}`;
+    const sic=b.querySelector('[id^="sic-"]');if(sic)sic.setAttribute('aria-label',`Sub-issues for Main Issue ${toR(i+1)}`);
+  });
+}
+
+/* SUB-ISSUE */
+function addSubIssue(mi){
+  siC[mi]=(siC[mi]||0)+1;const si=siC[mi];const uid=`m${mi}s${si}`;
+  tcC[uid+'e']=0;tcC[uid+'a']=0;wkC[uid]=0;
+  const el=document.createElement('div');
+  el.className='subissue-block';el.id=`sib-${uid}`;el.setAttribute('role','listitem');
+  el.innerHTML=siHTML(uid,si,mi);
+  document.getElementById(`sic-${mi}`).appendChild(el);
+  renumSI(mi);addET(uid);addAT(uid);addWK(uid);
+  buildSidebar();
+  announce(`Sub-Issue added to Main Issue ${toR(mi)}`);
+  setTimeout(()=>{
+    const hd=document.getElementById(`${uid}-hd`);
+    if(hd){hd.setAttribute('tabindex','-1');hd.focus();}
+  },150);
+}
+function siHTML(uid,si,mi){return `
+  <div class="subissue-header">
+    <span class="subissue-label" id="sil-${uid}">Sub-Issue ${toA(si)}</span>
+    ${si>1?`<button class="subissue-remove" onclick="remSI('${uid}',${mi})" aria-label="Remove Sub-Issue ${toA(si)}"><span aria-hidden="true">×</span></button>`:''}
+  </div>
+  <div class="substep-tabs" id="tabs-${uid}" role="tablist" aria-label="Sub-issue sections">
+    <button class="substep-tab active" id="tab-${uid}-r" role="tab" aria-selected="true" aria-controls="sp-${uid}-r" tabindex="0" onclick="swTab('${uid}','r')" onkeydown="onTabKeydown('${uid}','r',event)">Rule of Law</button>
+    <button class="substep-tab" id="tab-${uid}-e" role="tab" aria-selected="false" aria-controls="sp-${uid}-e" tabindex="-1" onclick="swTab('${uid}','e')" onkeydown="onTabKeydown('${uid}','e',event)">Explanation</button>
+    <button class="substep-tab" id="tab-${uid}-a" role="tab" aria-selected="false" aria-controls="sp-${uid}-a" tabindex="-1" onclick="swTab('${uid}','a')" onkeydown="onTabKeydown('${uid}','a',event)">Application</button>
+    <button class="substep-tab tab-warn" id="tab-${uid}-w" role="tab" aria-selected="false" aria-controls="sp-${uid}-w" tabindex="-1" onclick="swTab('${uid}','w')" onkeydown="onTabKeydown('${uid}','w',event)">Weaknesses</button>
+  </div>
+  <div class="substep-panel active" id="sp-${uid}-r" role="tabpanel" aria-labelledby="tab-${uid}-r" aria-hidden="false">${rulePanel(uid)}</div>
+  <div class="substep-panel" id="sp-${uid}-e" role="tabpanel" aria-labelledby="tab-${uid}-e" aria-hidden="true">${expPanel(uid)}</div>
+  <div class="substep-panel" id="sp-${uid}-a" role="tabpanel" aria-labelledby="tab-${uid}-a" aria-hidden="true">${appPanel(uid)}</div>
+  <div class="substep-panel" id="sp-${uid}-w" role="tabpanel" aria-labelledby="tab-${uid}-w" aria-hidden="true">
+    <div class="print-tab-label" style="display:none">Weaknesses</div>
+    <div id="wkc-${uid}"></div>
+    <button class="add-btn-small" onclick="addWK('${uid}')">+ Add Another Weakness</button>
+  </div>`;}
+function remSI(uid,mi){document.getElementById(`sib-${uid}`)?.remove();renumSI(mi);autoSave();refreshOutline();buildSidebar();announce(`Sub-issue removed`);}
+function renumSI(mi){
+  document.getElementById(`sic-${mi}`)?.querySelectorAll(':scope > .subissue-block').forEach((b,i)=>{
+    const l=b.querySelector('.subissue-label');if(l)l.textContent=`Sub-Issue ${toA(i+1)}`;
+  });
+}
+function swTab(uid,t){
+  ['r','e','a','w'].forEach(s=>{
+    const tab=document.getElementById(`tab-${uid}-${s}`);
+    const panel=document.getElementById(`sp-${uid}-${s}`);
+    const isActive=s===t;
+    tab?.classList.toggle('active',isActive);
+    if(tab){tab.setAttribute('aria-selected',isActive?'true':'false');tab.setAttribute('tabindex',isActive?'0':'-1');}
+    panel?.classList.toggle('active',isActive);
+    if(panel)panel.setAttribute('aria-hidden',isActive?'false':'true');
+  });
+}
+function onTabKeydown(uid,t,e){
+  const order=['r','e','a','w'];
+  const idx=order.indexOf(t);
+  if(e.key==='ArrowRight'||e.key==='ArrowLeft'){
+    e.preventDefault();
+    const next=e.key==='ArrowRight'?order[(idx+1)%4]:order[(idx+3)%4];
+    swTab(uid,next);
+    document.getElementById(`tab-${uid}-${next}`)?.focus();
+  }
+}
+
+/* RULE PANEL */
+function rulePanel(uid){return `
+  <div class="field-group">
+    <label class="field-label">Sub-Issue Heading</label>
+    ${re(`${uid}-hd`,'Type your sub-issue heading here…','sm')}
+  </div>
+  <div class="field-group">
+    <div class="checklist-label" style="margin-bottom:6px">My sub-issue heading is</div>
+    <div class="checklist">
+      <label class="radio-item"><input type="radio" name="${uid}-ht" value="a" onchange="onHT('${uid}','a')"><span><span class="tip-label" data-tip="An assertive heading states a legal argument.">Assertive</span></span></label>
+      <label class="radio-item"><input type="radio" name="${uid}-ht" value="d" onchange="onHT('${uid}','d')"><span><span class="tip-label" data-tip="A descriptive heading does not assert a legal argument. It is appropriate when the purpose of a section is to describe information generally to tee up later legal arguments.">Descriptive</span></span></label>
+    </div>
+  </div>
+  <div class="conditional-block" id="${uid}-af">
+    <div class="conditional-label">If assertive — my heading (check all that apply)</div>
+    <div class="checklist" style="background:transparent;border:none;padding:0;gap:7px">
+      <label class="check-item"><input type="checkbox" id="${uid}-a1" onchange="chkSIHd('${uid}');autoSave()"><span>States the action I want the court to take or the conclusion I want the court to reach</span></label>
+      <label class="check-item"><input type="checkbox" id="${uid}-a2" onchange="chkSIHd('${uid}');autoSave()"><span>States the primary reason the court should take that action or reach that conclusion</span></label>
+      <label class="check-item"><input type="checkbox" id="${uid}-a3" onchange="chkSIHd('${uid}');autoSave()"><span>Three lines or fewer</span></label>
+      <label class="check-item"><input type="checkbox" id="${uid}-a4" onchange="chkSIHd('${uid}');autoSave()"><span>Is a complete sentence that ends with proper punctuation</span></label>
+    </div>
+    <div class="feedback-banner" id="${uid}-hfb"></div>
+  </div>
+  <div class="conditional-block" id="${uid}-df">
+    <div class="conditional-label">If descriptive</div>
+    <div class="field-group" style="margin-bottom:0">
+      <label class="field-label">Brief statement of why a descriptive heading is useful and necessary here</label>
+      ${re(`${uid}-dr`,'Explain why a descriptive heading is appropriate…','sm')}
+    </div>
+  </div>
+  <hr class="field-divider">
+  <div class="field-group">
+    <label class="field-label">Rule of Law</label>
+    <div class="field-hint">Include a fully articulated rule of law that governs this sub-issue, with citations in Bluebook form.</div>
+    ${re(`${uid}-rule`,'Type your rule of law here…','lg')}
+  </div>
+  <div class="field-group">
+    <div class="checklist-label" style="margin-bottom:6px">My rule of law for this sub-issue relies on</div>
+    <div class="checklist">
+      <label class="check-item"><input type="checkbox" id="${uid}-expl" onchange="autoSave()"><span><strong><span class="tip-label" data-tip="Explains an existing rule from your client's perspective using rule language (whether quoted or paraphrased) from a statute or from one or more precedent cases.">Explicit Rule</span></strong></span></label>
+      <label class="check-item"><input type="checkbox" id="${uid}-impl" onchange="onImpl('${uid}',this.checked)"><span><strong><span class="tip-label" data-tip="Presents a synthesized rule based on patterns in the precedent cases.">Implicit Rule</span></strong></span></label>
+    </div>
+  </div>
+  <div class="conditional-block" id="${uid}-impf">
+    <div class="conditional-label">Implicit Rule — Supporting Cases</div>
+    <div class="field-hint" style="margin-bottom:10px">Complete an abbreviated case chart with the case name, holding, and key facts of cases that support my implicit rule.</div>
+    <table class="case-table" id="${uid}-ct">
+      <thead><tr><th scope="col">Case Name</th><th scope="col">Holding</th><th scope="col">Key Facts</th></tr></thead>
+      <tbody><tr>
+        <td>${re(`${uid}-c1n`,'Case name…','sm')}</td>
+        <td>${re(`${uid}-c1h`,'Holding…','sm')}</td>
+        <td>${re(`${uid}-c1f`,'Key facts…','sm')}</td>
+      </tr></tbody>
+    </table>
+    <button class="add-row-btn" onclick="addCR('${uid}')">+ Add Case</button>
+    <hr class="field-divider">
+    <div class="conditional-label">Are there any precedent cases that do not fit cleanly within my rule?</div>
+    <div class="checklist" style="background:transparent;border:none;padding:0;gap:7px;margin-bottom:8px">
+      <label class="radio-item"><input type="radio" name="${uid}-cf" value="y" onchange="onCF('${uid}','y')"><span>Yes</span></label>
+      <label class="radio-item"><input type="radio" name="${uid}-cf" value="n" onchange="onCF('${uid}','n')"><span>No</span></label>
+    </div>
+    <div class="conditional-block" id="${uid}-cfy">
+      <div class="conditional-label">Why is the implicit rule still viable? (select all that apply)</div>
+      <div class="checklist" style="background:transparent;border:none;padding:0;gap:7px">
+        <label class="check-item"><input type="checkbox" id="${uid}-v1" onchange="chkVia('${uid}');autoSave()"><span>The case falls outside the scope of my implicit rule because it is distinguishable on its facts.</span></label>
+        <label class="check-item"><input type="checkbox" id="${uid}-v2" onchange="chkVia('${uid}');autoSave()"><span>The case was decided on other grounds and any discussion of legal standards is dicta.</span></label>
+        <label class="check-item"><input type="checkbox" id="${uid}-v3" onchange="chkVia('${uid}');autoSave()"><span>The case is an outlier, and the overwhelming weight of authority supports my implicit rule.</span></label>
+        <label class="check-item"><input type="checkbox" id="${uid}-v4" onchange="chkVia('${uid}');autoSave()"><span>The case is old, and the trend of cases over time has moved in the direction of my implicit rule.</span></label>
+      </div>
+      <div class="feedback-banner" id="${uid}-vfb"></div>
+    </div>
+    <div class="conditional-block" id="${uid}-cfn">
+      <div class="conditional-label">My rule makes sense on its face, and a court will be able to easily apply it.</div>
+      <div class="checklist" style="background:transparent;border:none;padding:0;gap:7px">
+        <label class="radio-item"><input type="radio" name="${uid}-cs" value="y" onchange="onCS('${uid}','y')"><span>Yes</span></label>
+        <label class="radio-item"><input type="radio" name="${uid}-cs" value="n" onchange="onCS('${uid}','n')"><span>No</span></label>
+      </div>
+      <div class="feedback-banner" id="${uid}-csfb"></div>
+    </div>
+  </div>`;}
+
+function onHT(uid,t){
+  document.getElementById(`${uid}-af`)?.classList.toggle('visible',t==='a');
+  document.getElementById(`${uid}-df`)?.classList.toggle('visible',t==='d');
+  chkSIHd(uid);autoSave();refreshOutline();
+}
+function chkSIHd(uid){
+  const t=document.querySelector(`input[name="${uid}-ht"]:checked`)?.value;
+  if(t!=='a'){hfb(`${uid}-hfb`);return;}
+  const all=['a1','a2','a3','a4'].every(a=>document.getElementById(`${uid}-${a}`)?.checked);
+  all?fb(`${uid}-hfb`,'ok','✓','<strong>Heading looks good.</strong> Your assertive heading meets all the criteria.'):fb(`${uid}-hfb`,'warn','○','<strong>Review your heading.</strong> Make sure it meets all of the checklist items before moving on.');
+}
+function onImpl(uid,yes){document.getElementById(`${uid}-impf`)?.classList.toggle('visible',yes);autoSave();}
+function onCF(uid,val){
+  document.getElementById(`${uid}-cfy`)?.classList.toggle('visible',val==='y');
+  document.getElementById(`${uid}-cfn`)?.classList.toggle('visible',val==='n');
+  hfb(`${uid}-vfb`);hfb(`${uid}-csfb`);autoSave();
+}
+function chkVia(uid){
+  const any=['v1','v2','v3','v4'].some(v=>document.getElementById(`${uid}-${v}`)?.checked);
+  any?fb(`${uid}-vfb`,'ok','✓','<strong>Your rule is ready to use!</strong> Be sure to address the non-fitting case in your explanation section.'):hfb(`${uid}-vfb`);
+  autoSave();
+}
+function onCS(uid,val){
+  val==='y'?fb(`${uid}-csfb`,'ok','✓','<strong>Your rule is ready to use!</strong>'):fb(`${uid}-csfb`,'warn','↺','<strong>Revise your rule.</strong> If a rule doesn\'t pass the "common sense" test or a court won\'t be able to apply it, the rule isn\'t viable.');
+  autoSave();
+}
+function addCR(uid){
+  const tb=document.querySelector(`#${uid}-ct tbody`);if(!tb)return;
+  const n=tb.querySelectorAll('tr').length;if(n>=5){alert('Maximum 5 cases.');return;}
+  const r=n+1,tr=document.createElement('tr');
+  tr.innerHTML=`<td>${re(`${uid}-c${r}n`,'Case name…','sm')}</td><td>${re(`${uid}-c${r}h`,'Holding…','sm')}</td><td>${re(`${uid}-c${r}f`,'Key facts…','sm')}</td>`;
+  tb.appendChild(tr);autoSave();
+}
+
+/* EXP PANEL */
+function expPanel(uid){return `<p style="font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.6">Each paragraph in my Explanation section begins with a thesis sentence. Add one block per thesis.</p><div id="etc-${uid}"></div><button class="add-btn-small" onclick="addET('${uid}')">+ Add Explanation Thesis</button>`;}
+function addET(uid){
+  tcC[uid+'e']=(tcC[uid+'e']||0)+1;const n=tcC[uid+'e'],tid=`${uid}-et${n}`;
+  const c=document.getElementById(`etc-${uid}`);if(!c)return;
+  const b=document.createElement('div');b.className='thesis-block';b.id=tid;
+  b.innerHTML=`
+    <div class="thesis-block-header"><span class="thesis-block-label">Explanation Thesis ${n}</span>${n>1?`<button class="remove-btn" onclick="document.getElementById('${tid}').remove();autoSave();refreshOutline();" aria-label="Remove Explanation Thesis ${n}"><span aria-hidden="true">×</span></button>`:''}</div>
+    <div class="thesis-block-body">
+      <div class="field-group"><label class="field-label">Thesis Sentence</label>${re(`${tid}-t`,'Type your thesis sentence here…','sm')}</div>
+      <div class="field-group"><label class="field-label">Cases That Support the Thesis</label><div class="field-hint">Include citations in Bluebook form.</div>${re(`${tid}-auth`,'Type your citation sentence here…','sm')}</div>
+      <div class="field-group" style="margin-bottom:0">
+        <label class="check-item" style="align-items:flex-start"><input type="checkbox" id="${tid}-sk" onchange="chkET('${tid}');autoSave()" style="margin-top:3px;accent-color:var(--accent)"><span style="font-size:13px;color:var(--text2)">If I used a sentence starter that indicates a trend or the weight of authority (e.g., "Our appellate courts have consistently held…"), my sentence starter is accurate and consistent with my citations.</span></label>
+        <div class="feedback-banner" id="${tid}-sfb" style="margin-top:8px"></div>
+      </div>
+    </div>`;
+  c.appendChild(b);autoSave();
+}
+function chkOutlineReview(){
+  const checked=document.getElementById('outlineReviewed')?.checked;
+  const banner=document.getElementById('outlineReviewBanner');
+  if(!banner)return;
+  banner.setAttribute('role','status');
+  banner.setAttribute('aria-live','polite');
+  if(checked){
+    banner.className='feedback-banner ok visible';
+    banner.innerHTML='<span class="fb-icon" aria-hidden="true">✓</span><span class="fb-text"><strong>Outline reviewed.</strong> You\'re ready to move on to your submission.</span>';
+  } else {
+    banner.className='feedback-banner warn visible';
+    banner.innerHTML='<span class="fb-icon" aria-hidden="true">○</span><span class="fb-text"><strong>Review your outline before continuing.</strong> Once you\'re satisfied it accurately and persuasively captures your argument, check the box above.</span>';
+  }
+  autoSave();
+}
+
+function chkET(tid){
+  document.getElementById(`${tid}-sk`)?.checked?fb(`${tid}-sfb`,'ok','✓','<strong>Good.</strong> Your sentence starter is accurate and consistent with your citations.'):hfb(`${tid}-sfb`);
+}
+/* APP PANEL */
+function appPanel(uid){return `<p style="font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.6">Each paragraph in my Application section begins with a thesis sentence. Each thesis advances one type of reasoning.</p><div id="atc-${uid}"></div><button class="add-btn-small" onclick="addAT('${uid}')">+ Add Application Thesis</button>`;}
+function addAT(uid){
+  tcC[uid+'a']=(tcC[uid+'a']||0)+1;const n=tcC[uid+'a'],tid=`${uid}-at${n}`;
+  acC[tid]=0;
+  const c=document.getElementById(`atc-${uid}`);if(!c)return;
+  const b=document.createElement('div');b.className='thesis-block';b.id=tid;
+  b.innerHTML=`
+    <div class="thesis-block-header"><span class="thesis-block-label">Application Thesis ${n}</span>${n>1?`<button class="remove-btn" onclick="document.getElementById('${tid}').remove();autoSave();refreshOutline();" aria-label="Remove Application Thesis ${n}"><span aria-hidden="true">×</span></button>`:''}</div>
+    <div class="thesis-block-body">
+      <div class="field-group"><label class="field-label">Thesis Sentence</label>${re(`${tid}-t`,'Type your thesis sentence here…','sm')}</div>
+      <div class="field-group">
+        <div class="checklist-label" style="margin-bottom:6px">My thesis advances</div>
+        <div class="checklist">
+          <label class="radio-item"><input type="radio" name="${tid}-at" value="an" onchange="onAT('${tid}','an')"><span><span class="tip-label" data-tip="Compares the facts of the client's case and a precedent case to show why your client's case should have the same outcome or a different outcome than the precedent case.">Analogical reasoning</span></span></label>
+          <label class="radio-item"><input type="radio" name="${tid}-at" value="rb" onchange="onAT('${tid}','rb')"><span><span class="tip-label" data-tip="Compares the facts of the client's case directly against a legal standard (i.e., the rule).">Rule-based reasoning</span></span></label>
+          <label class="radio-item"><input type="radio" name="${tid}-at" value="pb" onchange="onAT('${tid}','pb')"><span><span class="tip-label" data-tip="Argues that a particular outcome is warranted because it is consistent with a goal or value that benefits society.">Policy-based reasoning</span></span></label>
+        </div>
+      </div>
+      <div class="conditional-block" id="${tid}-an">
+        <div class="conditional-label">Analogical Reasoning</div>
+        <div id="acc-${tid}"></div>
+        <button class="add-btn-small" onclick="addAC('${tid}')">+ Add Case</button>
+      </div>
+      <div class="conditional-block" id="${tid}-rb">
+        <div class="conditional-label">Rule-Based Reasoning — Syllogism</div>
+        <div class="field-hint" style="margin-bottom:10px">Identify the authority establishing the rule and describe the syllogism I will prove.</div>
+        <div class="field-group"><label class="field-label">Authority (case or statute) establishing the rule</label>${re(`${tid}-rba`,'Citation…','sm')}</div>
+        <div class="field-group"><label class="field-label">Major Premise (the rule)</label>${re(`${tid}-maj`,'Major premise…','sm')}</div>
+        <div class="field-group"><label class="field-label">Minor Premise (Circumstances of my client's case)</label>${re(`${tid}-min`,'Minor premise…','sm')}</div>
+        <div class="field-group" style="margin-bottom:0"><label class="field-label">Conclusion</label>${re(`${tid}-con`,'Conclusion…','sm')}</div>
+      </div>
+      <div class="conditional-block" id="${tid}-pb">
+        <div class="conditional-label">Policy-Based Reasoning</div>
+        <div class="field-group"><label class="field-label">Brief description of the policy interest</label>${re(`${tid}-pi`,'Policy interest…','sm')}</div>
+        <div class="field-group"><label class="field-label">Citations for cases supporting the policy interest</label>${re(`${tid}-pc`,'Citation(s)…','sm')}</div>
+        <div class="field-group" style="margin-bottom:0"><label class="field-label">How the policy interest is implicated by my client's case</label>${re(`${tid}-pa`,'How the policy applies…')}</div>
+      </div>
+    </div>`;
+  c.appendChild(b);autoSave();
+}
+function onAT(tid,t){['an','rb','pb'].forEach(x=>document.getElementById(`${tid}-${x}`)?.classList.toggle('visible',x===t));autoSave();}
+function addAC(tid){
+  acC[tid]=(acC[tid]||0)+1;const n=acC[tid],cid=`${tid}-ac${n}`;
+  const c=document.getElementById(`acc-${tid}`);if(!c)return;
+  const b=document.createElement('div');b.className='analog-case-block';b.id=cid;
+  b.innerHTML=`
+    <div class="analog-case-header"><span>Case ${n}</span>${n>1?`<button class="remove-btn" onclick="document.getElementById('${cid}').remove();autoSave();" style="color:var(--text3)" aria-label="Remove Case ${n}"><span aria-hidden="true">×</span></button>`:''}</div>
+    <div class="analog-case-body">
+      <div class="field-group"><label class="field-label">Case Name &amp; Citation</label>${re(`${cid}-cit`,'Case name and citation in Bluebook form…','sm')}</div>
+      <div class="field-group">
+        <div class="checklist-label" style="margin-bottom:6px">I will argue that this case is</div>
+        <div class="checklist" style="background:transparent;border:none;padding:0;gap:7px">
+          <label class="radio-item"><input type="radio" name="${cid}-st" value="sim" onchange="autoSave()"><span>Similar to my client's case</span></label>
+          <label class="radio-item"><input type="radio" name="${cid}-st" value="dis" onchange="autoSave()"><span>Dissimilar to my client's case (distinguishable)</span></label>
+        </div>
+      </div>
+      <div class="field-group" style="margin-bottom:0">
+        <label class="field-label">T-Chart: Factual Comparison</label>
+        <div class="field-hint">The key facts that support my analogical argument.</div>
+        <div class="tchart-wrap">
+          <div class="tchart-col"><div class="tchart-head">Key Facts — Precedent Case</div><div class="tchart-cell">${re(`${cid}-pf`,'Key facts from the precedent case…')}</div></div>
+          <div class="tchart-col"><div class="tchart-head">Key Facts — Client's Case</div><div class="tchart-cell">${re(`${cid}-cf`,'Key facts from my client\'s case…')}</div></div>
+        </div>
+      </div>
+    </div>`;
+  c.appendChild(b);autoSave();
+}
+
+/* WEAKNESS */
+function addWK(uid){
+  wkC[uid]=(wkC[uid]||0)+1;const n=wkC[uid],wid=`${uid}-w${n}`;
+  const c=document.getElementById(`wkc-${uid}`);if(!c)return;
+  const b=document.createElement('div');b.className='weakness-block';b.id=wid;
+  b.innerHTML=`
+    <div class="weakness-header"><span class="weakness-label">Weakness ${n}</span>${n>1?`<button class="remove-btn" onclick="document.getElementById('${wid}').remove();autoSave();" aria-label="Remove Weakness ${n}"><span aria-hidden="true">×</span></button>`:''}</div>
+    <div class="weakness-body">
+      <div class="field-group"><label class="field-label">Case That Presents a Potential Weakness</label><div class="field-hint">Identify the case and include an appropriate citation.</div>${re(`${wid}-case`,'Case name and citation…','sm')}</div>
+      <div class="field-group"><label class="field-label">How This Case Could Challenge My Argument</label><div class="field-hint">Briefly describe the argument from the opponent's perspective.</div>${re(`${wid}-ch`,'Brief description…')}</div>
+      <div class="field-group">
+        <div class="checklist-label" style="margin-bottom:6px">How I will address this weakness</div>
+        <div class="checklist">
+          <label class="radio-item"><input type="radio" name="${wid}-ap" value="br" onchange="onWA('${wid}','br')"><span>I will explain the case in favorable terms from my client's perspective by advancing a broader or more abstract rule.</span></label>
+          <label class="radio-item"><input type="radio" name="${wid}-ap" value="nr" onchange="onWA('${wid}','nr')"><span>I will explain the case in favorable terms from my client's perspective by advancing a narrower or more specific rule.</span></label>
+          <label class="radio-item"><input type="radio" name="${wid}-ap" value="di" onchange="onWA('${wid}','di')"><span>I will explain the case the same way my opponent probably would, but I will show that the case does not control because my client's case is distinguishable on its facts.</span></label>
+        </div>
+      </div>
+      <div class="conditional-block" id="${wid}-rp">
+        <div class="conditional-label">Is there any relevant precedent case that does not fit cleanly within my rule?</div>
+        <div class="checklist" style="background:transparent;border:none;padding:0;gap:7px;margin-bottom:6px">
+          <label class="radio-item"><input type="radio" name="${wid}-rf" value="n" onchange="onRF('${wid}','n')"><span>No</span></label>
+          <label class="radio-item"><input type="radio" name="${wid}-rf" value="y" onchange="onRF('${wid}','y')"><span>Yes</span></label>
+        </div>
+        <div class="conditional-block" id="${wid}-rfn">
+          <div class="conditional-label">My rule makes sense on its face, and a court will be able to easily apply it.</div>
+          <div class="checklist" style="background:transparent;border:none;padding:0;gap:7px">
+            <label class="radio-item"><input type="radio" name="${wid}-cs" value="y" onchange="onWCS('${wid}','y')"><span>Yes</span></label>
+            <label class="radio-item"><input type="radio" name="${wid}-cs" value="n" onchange="onWCS('${wid}','n')"><span>No</span></label>
+          </div>
+          <div class="feedback-banner" id="${wid}-csfb"></div>
+        </div>
+        <div class="conditional-block" id="${wid}-rfy">
+          <div class="conditional-label">The clear weight of authority supports my rule, with the non-fitting case as an outlier.</div>
+          <div class="checklist" style="background:transparent;border:none;padding:0;gap:7px">
+            <label class="radio-item"><input type="radio" name="${wid}-ol" value="y" onchange="onOL('${wid}','y')"><span>Yes</span></label>
+            <label class="radio-item"><input type="radio" name="${wid}-ol" value="n" onchange="onOL('${wid}','n')"><span>No</span></label>
+          </div>
+          <div class="feedback-banner" id="${wid}-olfb"></div>
+        </div>
+      </div>
+      <div class="conditional-block" id="${wid}-dp">
+        <div class="field-group">
+          <label class="field-label">T-Chart: Factual Distinction</label>
+          <div class="field-hint">Show how the facts of the precedent case compare to the facts of my client's case.</div>
+          <div class="tchart-wrap">
+            <div class="tchart-col"><div class="tchart-head">Facts — Precedent Case</div><div class="tchart-cell">${re(`${wid}-pf`,'Key facts from the precedent case…')}</div></div>
+            <div class="tchart-col"><div class="tchart-head">Distinguishing Facts — Client's Case</div><div class="tchart-cell">${re(`${wid}-cf`,'Distinguishing facts from my client\'s case…')}</div></div>
+          </div>
+        </div>
+        <div class="field-group" style="margin-bottom:0">
+          <div class="checklist-label" style="margin-bottom:6px">Are there any precedent cases that contradict the factual distinction I will draw?</div>
+          <div class="checklist" style="background:transparent;border:none;padding:0;gap:7px">
+            <label class="radio-item"><input type="radio" name="${wid}-cd" value="y" onchange="onCD('${wid}','y')"><span>Yes</span></label>
+            <label class="radio-item"><input type="radio" name="${wid}-cd" value="n" onchange="onCD('${wid}','n')"><span>No</span></label>
+          </div>
+          <div class="feedback-banner" id="${wid}-cdfb"></div>
+        </div>
+      </div>
+    </div>`;
+  c.appendChild(b);autoSave();
+}
+function onWA(wid,ap){
+  document.getElementById(`${wid}-rp`)?.classList.toggle('visible',ap==='br'||ap==='nr');
+  document.getElementById(`${wid}-dp`)?.classList.toggle('visible',ap==='di');
+  autoSave();
+}
+function onRF(wid,val){
+  document.getElementById(`${wid}-rfn`)?.classList.toggle('visible',val==='n');
+  document.getElementById(`${wid}-rfy`)?.classList.toggle('visible',val==='y');
+  hfb(`${wid}-csfb`);hfb(`${wid}-olfb`);autoSave();
+}
+function onWCS(wid,val){
+  val==='y'?fb(`${wid}-csfb`,'ok','✓','<strong>Your rule is ready to use!</strong>'):fb(`${wid}-csfb`,'warn','↺','<strong>Revise your rule.</strong> If a rule doesn\'t pass the "common sense" test or a court won\'t be able to apply it, the rule isn\'t viable.');
+  autoSave();
+}
+function onOL(wid,val){
+  val==='y'?fb(`${wid}-olfb`,'ok','✓','<strong>Your rule is ready to use!</strong> Be sure to acknowledge the outlier case and demonstrate that the clear weight of authority supports your rule.'):fb(`${wid}-olfb`,'warn','↺','<strong>Revise your rule.</strong> A rule is not viable if it is inconsistent with every precedent case, unless the non-fitting case is an outlier and the clear weight of authority supports the rule.');
+  autoSave();
+}
+function onCD(wid,val){
+  val==='n'?fb(`${wid}-cdfb`,'ok','✓','<strong>Good!</strong> Be sure to explain the factual distinction clearly in your application section.'):fb(`${wid}-cdfb`,'warn','↺','<strong>Your client\'s case may not be distinguishable on its facts.</strong> Consider whether there is another factual distinction you could draw.');
+  autoSave();
+}
+
+/* OUTLINE */
+function refreshOutline(){clearTimeout(window._ot);window._ot=setTimeout(doOutline,400);}
+function doOutline(){
+  const el=document.getElementById('outlineContent');if(!el)return;
+  const theme=rt('theme-main');
+  let h=`<div class="outline-theme"><strong>Theme</strong>${theme||'<span class="ol-placeholder">No theme entered yet.</span>'}</div><div class="outline-title">Argument</div>`;
+  const mis=document.querySelectorAll('#mainIssueContainer > .issue-block');
+  if(!mis.length){el.innerHTML=h+`<p class="outline-empty">No main issues added yet. Complete Step 2 to generate the outline.</p>`;return;}
+  h+=`<ol class="ol-main">`;
+  mis.forEach((mb,mi)=>{
+    const idx=mi+1,mhd=rt(`mi-${idx}-hd`)||`<span class="ol-placeholder">[Main Issue ${toR(idx)} heading not yet entered]</span>`;
+    h+=`<li><div class="ol-entry"><span class="ol-label">${toR(idx)}.</span>${mhd}</div>`;
+    const sic=document.getElementById(`sic-${idx}`);
+    if(sic){
+      const sis=sic.querySelectorAll(':scope > .subissue-block');
+      if(sis.length){
+        h+=`<ol class="ol-sub">`;
+        sis.forEach((sb,si)=>{
+          const uid=sb.id.replace('sib-',''),shd=rt(`${uid}-hd`)||`<span class="ol-placeholder">[Sub-Issue ${toA(si+1)} heading not yet entered]</span>`;
+          h+=`<li><div class="ol-entry"><span class="ol-label">${toA(si+1)}.</span>${shd}</div>`;
+          const ts=[];
+          // gather exp theses
+          document.getElementById(`etc-${uid}`)?.querySelectorAll('.thesis-block').forEach(tb=>{const v=rt(`${tb.id}-t`);if(v)ts.push(v);});
+          // gather app theses
+          document.getElementById(`atc-${uid}`)?.querySelectorAll('.thesis-block').forEach(tb=>{const v=rt(`${tb.id}-t`);if(v)ts.push(v);});
+          if(ts.length)h+=`<ol class="ol-theses">${ts.map((t,i)=>`<li><span class="ol-label">${toL(i+1)}.</span>${t}</li>`).join('')}</ol>`;
+          h+=`</li>`;
+        });
+        h+=`</ol>`;
+      }
+    }
+    h+=`</li>`;
+  });
+  h+=`</ol>`;el.innerHTML=h;
+}
+
+/* SAVE / LOAD */
+function autoSave(){clearTimeout(window._st);window._st=setTimeout(()=>{saveAll();buildSidebar();},900);}
+function saveAll(){
+  try{
+    const d={};
+    document.querySelectorAll('.rich-content[id]').forEach(e=>d['r:'+e.id]=e.innerHTML);
+    document.querySelectorAll('input[type="checkbox"][id]').forEach(e=>d[e.id]=e.checked);
+    document.querySelectorAll('input[type="radio"]').forEach(e=>{if(e.name&&e.checked)d['rad:'+e.name]=e.value;});
+    d['_mi']=miCount;d['_si']=JSON.stringify(siC);d['_tc']=JSON.stringify(tcC);
+    d['_wk']=JSON.stringify(wkC);d['_ac']=JSON.stringify(acC);
+    localStorage.setItem('outFv3',JSON.stringify(d));
+    document.getElementById('saveStatus').textContent='Saved '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+  }catch(e){document.getElementById('saveStatus').textContent='Save unavailable';}
+}
+function loadAll(){
+  try{
+    const raw=localStorage.getItem('outFv3');if(!raw)return false;
+    const d=JSON.parse(raw);const smi=d['_mi']||0;if(!smi)return false;
+    const sSI=JSON.parse(d['_si']||'{}'),sTC=JSON.parse(d['_tc']||'{}'),sWK=JSON.parse(d['_wk']||'{}'),sAC=JSON.parse(d['_ac']||'{}');
+    for(let mi=1;mi<=smi;mi++){
+      miCount++;siC[mi]=0;
+      const el=document.createElement('div');el.className='issue-block';el.id=`mi-${mi}`;el.setAttribute('role','listitem');el.innerHTML=miHTML(mi);
+      document.getElementById('mainIssueContainer').appendChild(el);renumMI();
+      for(let si=1;si<=(sSI[mi]||1);si++){
+        siC[mi]++;const uid=`m${mi}s${si}`;tcC[uid+'e']=0;tcC[uid+'a']=0;wkC[uid]=0;
+        const sel=document.createElement('div');sel.className='subissue-block';sel.id=`sib-${uid}`;sel.setAttribute('role','listitem');sel.innerHTML=siHTML(uid,si,mi);
+        document.getElementById(`sic-${mi}`).appendChild(sel);renumSI(mi);
+        for(let e=1;e<=(sTC[uid+'e']||1);e++)addET(uid);
+        for(let a=1;a<=(sTC[uid+'a']||1);a++)addAT(uid);
+        for(let w=1;w<=(sWK[uid]||1);w++)addWK(uid);
+      }
+    }
+    setTimeout(()=>{
+      // restore case table extra rows
+      document.querySelectorAll('[id$="-ct"] tbody').forEach(tb=>{
+        const uid=tb.closest('table')?.id.replace('-ct','');if(!uid)return;
+        for(let r=2;r<=5;r++){if(d[`r:${uid}-c${r}n`]!==undefined)addCR(uid);}
+      });
+      // restore analog cases
+      Object.keys(sAC).forEach(tid=>{acC[tid]=0;for(let c=1;c<=sAC[tid];c++)addAC(tid);});
+      // restore values
+      document.querySelectorAll('.rich-content[id]').forEach(e=>{if(d['r:'+e.id]!==undefined)e.innerHTML=d['r:'+e.id];});
+      document.querySelectorAll('input[type="checkbox"][id]').forEach(e=>{if(d[e.id]!==undefined)e.checked=d[e.id];});
+      document.querySelectorAll('input[type="radio"]').forEach(e=>{const s=d['rad:'+e.name];if(s&&e.value===s){e.checked=true;e.dispatchEvent(new Event('change'));}});
+      document.querySelectorAll('input[type="checkbox"][id]').forEach(e=>{if(e.checked)e.dispatchEvent(new Event('change'));});
+      // restore outline review banner
+      const orEl=document.getElementById('outlineReviewed');if(orEl)chkOutlineReview();
+      doOutline();
+      buildSidebar();
+    },200);
+    return true;
+  }catch(e){return false;}
+}
+
+
+/* TOOLTIP — mouse + keyboard accessible */
+(function(){
+  const tf=document.getElementById('tipFloat');
+  // Make all tip-labels keyboard focusable and add aria-describedby
+  function initTips(){
+    document.querySelectorAll('[data-tip]').forEach((el,i)=>{
+      if(el.hasAttribute('data-tip-init'))return;
+      el.setAttribute('data-tip-init','1');
+      if(!el.hasAttribute('tabindex'))el.setAttribute('tabindex','0');
+      el.setAttribute('role','button');
+      el.addEventListener('keydown',function(ev){
+        if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();showTip(el);positionTipEl(el);}
+        if(ev.key==='Escape')hideTip();
+      });
+      // Create hidden description for screen readers
+      const descId=`tip-desc-${i}`;
+      let desc=document.getElementById(descId);
+      if(!desc){
+        desc=document.createElement('span');
+        desc.id=descId;
+        desc.style.cssText='position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden;';
+        desc.textContent=el.dataset.tip;
+        document.body.appendChild(desc);
+      }
+      el.setAttribute('aria-describedby',descId);
+    });
+  }
+  // Run on load and after dynamic content added
+  window.addEventListener('load',initTips);
+  // Re-run when DOM changes (new tips added dynamically)
+  const tipObserver=new MutationObserver(()=>initTips());
+  tipObserver.observe(document.body,{childList:true,subtree:true});
+
+  function showTip(el){
+    if(!tf)return;
+    tf.textContent=el.dataset.tip;
+    tf.style.display='block';
+  }
+  function hideTip(){if(tf)tf.style.display='none';}
+
+  document.addEventListener('mouseover',e=>{
+    const el=e.target.closest('[data-tip]');
+    if(el){showTip(el);positionTip(e);}
+  });
+  document.addEventListener('focusin',e=>{
+    const el=e.target.closest('[data-tip]');
+    if(!el||!tf)return;
+    showTip(el);
+    const r=el.getBoundingClientRect();
+    positionTipEl(el);
+  });
+  document.addEventListener('mousemove',e=>{
+    if(!tf||tf.style.display==='none')return;
+    if(!e.target.closest('[data-tip]')){hideTip();return;}
+    positionTip(e);
+  });
+  document.addEventListener('mouseout',e=>{
+    if(!e.target.closest('[data-tip]'))hideTip();
+  });
+  document.addEventListener('focusout',e=>{
+    if(!e.target.closest('[data-tip]'))hideTip();
+  });
+  document.addEventListener('keydown',e=>{
+    if(e.key==='Escape')hideTip();
+  });
+  function positionTip(e){
+    const pad=14,bw=260;
+    let left=e.clientX+pad;
+    let top=e.clientY-tf.offsetHeight-10;
+    if(left+bw>window.innerWidth-pad)left=e.clientX-bw-pad;
+    if(top<8)top=e.clientY+20;
+    tf.style.left=left+'px';
+    tf.style.top=top+'px';
+  }
+  function positionTipEl(el){
+    if(!tf)return;
+    const r=el.getBoundingClientRect();
+    let left=Math.min(r.left,window.innerWidth-274);
+    let top=r.top+window.scrollY-tf.offsetHeight-8;
+    if(top<window.scrollY+8)top=r.bottom+window.scrollY+8;
+    tf.style.left=left+'px';
+    tf.style.top=top+'px';
+  }
+})();
+
+window.addEventListener('load',()=>{
+  if(!loadAll())addMainIssue();
+  window.addEventListener('scroll',updateSidebarActive,{passive:true});
+});
+</script>
+</body>
+</html>
