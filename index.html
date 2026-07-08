@@ -6,15 +6,63 @@
 <title>Interactive Case Brief Generator</title>
 <style>
 body{font-family:Arial,sans-serif;background:#f4f6f8;margin:0}header{background:#111;color:#fff;padding:16px 24px}.wrap{max-width:1100px;margin:auto;padding:20px}.card{background:#fff;padding:20px;margin:15px 0;border-left:5px solid #1a56db}.field{margin:12px 0}.field label{display:block;font-weight:bold;margin-bottom:5px}input,textarea,select{width:100%;padding:10px;box-sizing:border-box}textarea{min-height:90px}.warn{background:#fff3cd;border-left:5px solid #b45309;padding:12px;margin:12px 0}.issue{border:2px solid #1a56db;padding:15px;margin:15px 0}.btn{background:#1a56db;color:#fff;border:none;padding:10px 18px;cursor:pointer;margin:5px}.output{background:#fff;border:2px solid #111;padding:20px;white-space:pre-wrap}
+#printArea{
+display:none;
+}
+@media print {
+body * {
+visibility:hidden;
+}
+  
+#printArea,
+#printArea * {
+    visibility:visible;
+}
+
+#printArea {
+  display:block;
+
+  position:absolute;
+  left:0;
+  top:0;
+  width:100%;
+
+  background:white;
+  padding:30px;
+  }
+}
 </style>
 </head>
 <body>
 <header><h1>Interactive Case Brief Generator</h1></header>
+  <div id="saveStatus"
+    style="background:#eef6ff;
+      color:#1a56db;
+      padding:10px 20px;
+      font-size:14px;">
+Ready
+</div>
+<div id="saveStatus"
+  style="background:#eef6ff;
+    color:#1a56db;
+    padding:10px 20px;
+    font-size:14px;">
+Ready
+</div>
 <div class="wrap">
 <div class="card">
 <h2>Case Information</h2>
 <div class="field"><label>Case Name</label><input id="caseName"></div>
-<div class="field"><label>Citation</label><input id="citation"></div>
+<div class="field">
+  <label>Citation</label>
+  <input id="citation">
+  <label style="font-weight:normal;margin-top:10px;">
+    <input type="checkbox"
+      id="bluebookCheck"
+      style="width:auto;margin-right:8px;">
+My citation is in proper Bluebook format.
+  </label>
+</div>
 <div class="field"><label>Court</label><input id="court"></div>
 <div class="field"><label>Year</label><input id="year"></div>
 <div class="field"><label>Procedural Posture</label><textarea id="posture"></textarea></div>
@@ -27,18 +75,248 @@ body{font-family:Arial,sans-serif;background:#f4f6f8;margin:0}header{background:
 <div class="field"><label>Concurrence</label><textarea id="conc"></textarea></div>
 <div class="field"><label>Dissent</label><textarea id="dissent"></textarea></div>
 <div class="field"><label>Significance</label><textarea id="sig"></textarea></div>
-<div class="field"><label>Student Analysis</label><textarea id="analysis"></textarea></div>
-<div class="field"><label>Most Important Lesson</label><textarea id="lesson"></textarea></div>
+<div class="field">
+  <label>Analysis and Key Takeaway</label>
+ 
+  <textarea id="analysis"></textarea>
 </div>
-<button class="btn" onclick="generate()">Generate Case Brief</button>
-<button class="btn" onclick="window.print()">Print / Save PDF</button>
+ 
+<button class="btn" onclick="generate()">
+  Generate Case Brief
+</button>
+
+<button class="btn" onclick="printBrief()">
+  Print / Save PDF
+</button>
+ 
+<button class="btn"
+    style="background:#c0392b"
+    onclick="clearSavedWork()">
+  Clear Saved Work
+</button>
 <div id="output" class="output"></div>
+<div id="printArea"></div>
 </div>
 <script>
 let count=0;
-function addIssue(){count++;let d=document.createElement('div');d.className='issue';d.innerHTML=`<h3>Issue ${count}</h3><div class='warn'><strong>Holding</strong> = answer to the legal question. <strong>Disposition</strong> = what the court did with the case.</div><label>Issue</label><textarea class='issueQ'></textarea><label>Holding</label><textarea class='holding'></textarea><label>Disposition</label><select class='disp'><option></option><option>Affirmed</option><option>Reversed</option><option>Vacated</option><option>Remanded</option><option>Reversed and Remanded</option></select><label>Rule of Law</label><textarea class='rule'></textarea><label>Court Reasoning</label><textarea class='reason'></textarea><p><input type='checkbox'> Holding answers issue question<br><input type='checkbox'> Disposition is procedural action<br><input type='checkbox'> I understand they are different</p>`;document.getElementById('issues').appendChild(d);save();}
-function generate(){let txt=`CASE BRIEF\n\nCase: ${caseName.value}\nCitation: ${citation.value}\nCourt: ${court.value}\nYear: ${year.value}\n\nPROCEDURAL POSTURE\n${posture.value}\n\nCASE DISPOSITION\n${caseDisp.value}\n\nFACTS\n${facts.value}\n\n`;document.querySelectorAll('.issue').forEach((i,n)=>{txt+=`ISSUE ${n+1}\n${i.querySelector('.issueQ').value}\n\nHOLDING\n${i.querySelector('.holding').value}\n\nDISPOSITION\n${i.querySelector('.disp').value}\n\nRULE OF LAW\n${i.querySelector('.rule').value}\n\nREASONING\n${i.querySelector('.reason').value}\n\n`;});txt+=`CONCURRENCE\n${conc.value||'None'}\n\nDISSENT\n${dissent.value||'None'}\n\nSIGNIFICANCE\n${sig.value}\n\nSTUDENT ANALYSIS\n${analysis.value}\n\nMOST IMPORTANT LESSON\n${lesson.value}`;output.textContent=txt;save();}
-function save(){localStorage.setItem('caseBriefGen',document.body.innerHTML)}
+function addIssue(){
+  count++;
+  let d=document.createElement('div');
+  d.className='issue';
+  d.innerHTML=`
+  <div style="
+      display:flex;
+      justify-content:space-between;
+      align-items:center;">
+  <h3>Issue ${count}</h3>
+
+  <button class="btn"
+      style="background:#c0392b"
+      onclick="
+        this.closest('.issue').remove();
+        autoSave();">
+  Delete
+</button>
+
+</div>
+
+  <div class='warn'>
+    <strong>Holding</strong> = answer to the legal question. 
+    <strong>Disposition</strong> = what the court did with the case.
+    </div>
+    <label>Issue</label>
+    <textarea class='issueQ'></textarea>
+    <label>Holding</label>
+    <textarea class='holding'></textarea>
+    <label>Disposition</label>
+    
+    <select class='disp'>
+    <option></option>
+    <option>Affirmed</option>
+    <option>Reversed</option>
+    <option>Vacated</option>
+    <option>Remanded</option>
+    <option>Reversed and Remanded</option>
+    </select>
+    
+    <label>Rule of Law & Court Reasoning</label>
+    
+    <textarea class='ruleReason'></textarea>
+    
+    <p>
+      <input type='checkbox'>
+      Holding answers issue question
+      <br>
+
+      <input type='checkbox'>
+      Disposition is procedural action
+      <br>
+
+  <input type='checkbox'>
+  I understand they are different
+</p>
+
+`;
+ 
+document.getElementById('issues')
+        .appendChild(d);
+
+// autoSave();
+}
+
+function generate(){
+ 
+  let txt = `CASE BRIEF
+ 
+Case: ${caseName.value}
+ 
+Citation: ${citation.value}
+ 
+Bluebook Citation Checked:
+${bluebookCheck.checked ? 'Yes' : 'No'}
+ 
+Court: ${court.value}
+ 
+Year: ${year.value}
+ 
+PROCEDURAL POSTURE
+
+${posture.value}
+
+CASE DISPOSITION
+
+${caseDisp.value}
+
+FACTS
+
+${facts.value}
+
+`;
+
+  document.querySelectorAll('.issue')
+      .forEach((i,n)=>{
+
+      txt += `
+
+ISSUE ${n+1}
+
+${i.querySelector('.issueQ').value}
+
+HOLDING
+
+${i.querySelector('.holding').value}
+
+DISPOSITION
+
+${i.querySelector('.disp').value}
+
+RULE OF LAW & COURT REASONING
+
+${i.querySelector('.ruleReason').value}
+
+`;
+
+    });
+
+    txt += `
+
+CONCURRENCE
+
+${conc.value || 'None'}
+
+DISSENT
+
+${dissent.value || 'None'}
+
+SIGNIFICANCE
+
+${sig.value}
+
+ANALYSIS AND KEY TAKEAWAY
+
+${analysis.value}
+`;
+
+  output.textContent = txt;
+
+  autoSave();
+}
+
 addIssue();
+ function autoSave(){
+  try{
+
+    const data = {
+
+      caseName: caseName.value,
+      citation: citation.value,
+      bluebook:
+        document.getElementById(
+          "bluebookCheck"
+        ).checked,
+ 
+      court: court.value,
+      year: year.value,
+      posture: posture.value,
+      caseDisp: caseDisp.value,
+      facts: facts.value,
+      conc: conc.value,
+      dissent: dissent.value,
+      sig: sig.value,
+      analysis: analysis.value
+
+  };
+
+  localStorage.setItem(
+      "caseBriefGeneratorData",
+      JSON.stringify(data)
+
+  );
+ 
+  document.getElementById(
+      "saveStatus"
+  ).textContent =
+    "Autosaved: " +
+    new Date().toLocaleTimeString();
+ 
+} catch(e){
+
+    document.getElementById(
+        "saveStatus"
+    ).textContent =
+        "Autosave unavailable";
+  }
+}
+
+function clearSavedWork(){
+
+  if(confirm(
+      "Delete all saved work?"
+
+  )){
+
+    try{
+        localStorage.removeItem(
+            "caseBriefGeneratorData"
+        );
+    }catch(e){}
+    location.reload();
+  }
+}
+ 
+function printBrief(){
+
+  generate();
+
+  document.getElementById(
+      "printArea"
+  ).textContent =
+  document.getElementById(
+        "output"
+    ).textContent;
+
+  window.print();
+
+} 
 </script>
 </body></html>
