@@ -14,6 +14,7 @@ display:none;
  #printArea pre{
 white-space:pre-wrap;
 font-family:Georgia, serif;
+font-size:12pt;
 line-height:1.6;
 }
 @media print {
@@ -315,14 +316,15 @@ function printBrief(){
 
   generate();
 
-  document.getElementById(
-      "printArea"
- ).innerHTML =
-"<pre>" +
-document.getElementById(
-"output"
-).textContent +
-"</pre>";
+  const brief =
+document.getElementById("output")
+.textContent;
+
+ document.getElementById(
+"printArea"
+).innerHTML =
+
+"<pre>" + brief + "</pre>";
  
   window.print();
 } 
